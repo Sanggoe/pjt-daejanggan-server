@@ -352,11 +352,11 @@ export default App;
 
 <html>
 
-<p color='blue'>안냥</p>
+<p style="color : red; font-size : 20px;">안녕</p>
 
 </html>
 
-<p color='blue'>안냥</p>
+<p style="color : red; font-size : 20px;">안녕</p>
 
 
 
