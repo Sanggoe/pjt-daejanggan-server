@@ -75,6 +75,8 @@
   ```
 
   * front를 빌드한 다음에 back을 빌드하도록 하는 목적?
+  
+* `npm install axios`명령어로 <u>axios 다운로드</u>
 
 
 
@@ -333,6 +335,30 @@ const App = () => {
 
 export default App;
 ```
+
+
+
+### axios로 API 통신
+
+* [json place holder 라는 무료 fake API testing 사이트](https://jsonplaceholder.typicode.com/)
+* useEffect를 이용해서 axios로 해당 url에 요청을 보내면, 응답으로 받아온 데이터를 가지고 변수에 적용한다.
+* 당연히 JSON 형태의 데이터
+
+```jsx
+
+```
+
+
+
+<html>
+
+<p color='blue'>안냥</p>
+
+</html>
+
+<p color='blue'>안냥</p>
+
+
 
 
 
