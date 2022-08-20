@@ -1,10 +1,25 @@
-# Amsong-checker site Project
+# PJT_대장간
 
-암송 체킹 사이트 구축 프로젝트
+* 성경 구절 암송 체킹 사이트 구축 프로젝트
 
 
 
-## 학습을 위한 선행 예제 프로젝트 진행
+## 학습을 위한 선행 예제 프로젝트1
+
+### React 개념 공부
+
+* [test-react-app](https://github.com/Sanggoe/test-react-app)
+* React CRUD 구현하기 예제
+
+
+
+### View
+
+![image-20220820180317301](imgs/image-20220820180317301.png)
+
+
+
+## 학습을 위한 선행 예제 프로젝트2
 
 ### 환경 구축
 
@@ -29,8 +44,24 @@
   "proxy": "http://localhost:8080",
   ```
 
-  * build.gradle 파일에 의존성 추가
+  * 요건 다른 예제에서 한건데, setProxy.js 파일을 추가하는 방법을 하면 위에 프록시 추가 필요 없음
 
+  ```js
+  const { createProxyMiddleware } = require('http-proxy-middleware');
+  
+  module.exports = function(app) {
+      app.use(
+          '/api',
+          createProxyMiddleware({
+              target: 'http://localhost:8080',
+              changeOrigin: true,
+          })
+      )
+  }
+  ```
+  
+  * build.gradle 파일에 의존성 추가
+  
   ```groovy
   def frontendDir = "$projectDir/src/main/frontend"
   
@@ -57,7 +88,7 @@
   
   task buildReact(type: Exec) {
   	dependsOn "installReact"
-  	workingDir "$frontendDir"
+	workingDir "$frontendDir"
   	inputs.dir "$frontendDir"
   	group = BasePlugin.BUILD_GROUP
   	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -73,7 +104,7 @@
   	into "$projectDir/src/main/resources/static"
   }
   ```
-
+  
   * front를 빌드한 다음에 back을 빌드하도록 하는 목적?
   
 * `npm install axios`명령어로 <u>axios 다운로드</u>
@@ -343,34 +374,307 @@ export default App;
 * [json place holder 라는 무료 fake API testing 사이트](https://jsonplaceholder.typicode.com/)
 * useEffect를 이용해서 axios로 해당 url에 요청을 보내면, 응답으로 받아온 데이터를 가지고 변수에 적용한다.
 * 당연히 JSON 형태의 데이터
+* 근데 아래 코드는 뭔가 내컴에서는 안된다.. 뭐지...
 
 ```jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
+const App = () => {
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(async() => {
+    // axios({
+    //   method: 'GET',
+    //   //url:'https://jsonplaceholder.typicode.com/posts'
+    //   url: 'https://jsonplaceholder.typicode.com/photos'
+    // }).then(response => setPosts(response.data))
+
+    // axios.get('https://jsonplaceholder.typicode.com/photos')
+    // .then(response => setPosts(response.data)) // 비동기 통신
+
+    // await, promise, async 차이 검색해보세요
+    try {
+      const response = await axios.get('https://jsonplaceholder.typicode.com/photos');
+      setPosts(response.data);
+    } catch(error) {
+      console.log(error)
+    }
+  })
+
+  return (
+    <ul>
+      {posts.map(post => (
+        <li key={post.id}>
+          <div>{post.title}</div>
+          <div><img src={post.thumbnailUrl} /></div>
+        </li>
+      ))}</ul>
+  )
+}
+export default App;
 ```
 
 
 
-<html>
+### 백엔드에서 데이터 가져와 프론트에 뿌려보기 예제
 
-<p style="color : red; font-size : 20px;">안녕</p>
+* 앞서 위에서 proxy 관련 js 파일 만들고 환경을 구축한 다음
+* intelij의 controller 파일을 추가해준다.
+* 즉, 서버단에서 요청에 응답할 내용을 추가
 
-</html>
+```java
+package com.sanggoe.exam.controller;
 
-<p style="color : red; font-size : 20px;">안녕</p>
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloWorldController {
+
+    @GetMapping("/api/hello")
+    public String test() {
+        return "Hello, Sanggoe!";
+    }
+}
+```
 
 
+
+* 아래 react의 App.js 파일에서 axios.get으로 요청
+
+```jsx
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+
+function App() {
+   const [hello, setHello] = useState('')
+
+    useEffect(() => {
+        axios.get('/api/hello')
+        .then(response => setHello(response.data))
+        .catch(error => console.log(error))
+    }, []);
+
+    return (
+        <div>
+            백엔드에서 가져온 데이터입니다 : {hello}
+        </div>
+    );
+}
+
+export default App;
+```
+
+
+
+## 학습을 위한 선행 예제 프로젝트3 - MUI 응용
+
+* 환경은 위 예제와 동일
+* [MUI](https://mui.com/)
+
+
+
+### App View
+
+![image-20220820175939993](imgs/image-20220820175939993.png)
+
+
+
+### App.css
+
+```css
+.App {
+  margin: 0 auto;
+  margin-top: 200px;
+  text-align: center;
+  width: 400px;
+}
+```
+
+
+
+### App.js
+
+```jsx
+import React, { useState } from 'react';
+import "./App.css"
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+function Header() {
+  return (
+    <header>
+      <h1>Welcome</h1>
+    </header>
+  );
+}
+
+function Nav() {
+  return (
+    <nav>
+      <ol>
+        <li>html</li>
+        <li>css</li>
+      </ol>
+    </nav>
+  )
+}
+
+function LongText() {
+  return (
+    <>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+    </>
+  )
+}
+
+function Article() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <article>
+      <h2>Welcome</h2>
+      <LongText></LongText>
+      <br />
+      <ButtonGroup>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setOpen(true);
+          }} >
+          Create</Button>
+        <Button variant="outlined">Update</Button>
+      </ButtonGroup>
+      <Button variant="outlined">Delete</Button>
+      <Dialog open={open}>
+        <DialogTitle>Create</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Hello create!!</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined">CREATE</Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setOpen(false);
+            }}>
+            CANCEL</Button>
+        </DialogActions>
+      </Dialog>
+    </article>)
+}
+
+export default function App() {
+  return (
+    <Container fixed>
+      <Header></Header>
+      <Grid container>
+        <Grid item xs={2}>
+          <Nav></Nav>
+        </Grid>
+        <Grid item xs={10}>
+          <Article></Article>
+        </Grid>
+      </Grid>
+    </Container>
+  )
+}
+```
+
+
+
+
+
+### Login View
+
+![image-20220820175717992](imgs/image-20220820175717992.png)
+
+
+
+### Login.js
+
+```jsx
+import React from 'react';
+import "./Login.css"
+import { TextField, Checkbox, Button, FormControlLabel, Grid, Link, Typography, Box, Avatar, Container } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+export default function Login() {
+    return (
+        <Container component="main" maxWidth="xs">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign in
+                </Typography>
+
+                <TextField label="Email Address"
+                    margin='normal'
+                    required
+                    fullWidth
+                    name="email"
+                    autoComplete="email"
+                    autoFocus />
+
+                <TextField label="Password"
+                    margin='normal'
+                    type="password"
+                    required
+                    fullWidth
+                    name="password"
+                    autoComplete="current-password" />
+
+                <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Remember me" />
+
+                <Button type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}>Sign in</Button>
+                <Grid container>
+                    <Grid item xs>
+                        <Link>Forgot password?</Link>
+                    </Grid>
+                    <Grid>
+                        <Link>Sign Up</Link>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Container>
+    )
+}
+```
 
 
 
 ## Todo (Learning Curve)
 
 * [Spring - React 프로젝트 연동](https://www.youtube.com/watch?v=1sw8UTWC8kc&t=319s) V
-* [React 사용법 간단히 배우기 - 예제 프로젝트](youtube.com/watch?v=lKYp2QQFYK4&list=PLZzruF3-_clvT8YG7aErccPAncirfPWav&index=5) (진행중)
-* [블로그 같이 켜놓고 따라해보기 - 예제 프로젝트](https://velog.io/@u-nij/Spring-Boot-React.js-%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD-%EC%84%B8%ED%8C%85)
-* [React MUI 사용법 간단히 배우기 - 예제 프로젝트](https://www.youtube.com/watch?v=or3np70c7zU&t=346s)
+* [React 사용법 간단히 배우기 - 예제 프로젝트](youtube.com/watch?v=lKYp2QQFYK4&list=PLZzruF3-_clvT8YG7aErccPAncirfPWav&index=5)  V
+* [블로그 같이 켜놓고 따라해보기 - 예제 프로젝트](https://velog.io/@u-nij/Spring-Boot-React.js-%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD-%EC%84%B8%ED%8C%85)  V
+* [React MUI 사용법 간단히 배우기 - 예제 프로젝트](https://www.youtube.com/watch?v=or3np70c7zU&t=346s) V
+* [React MUI 사용 로그인 UI 만들기 - 예제 프로젝트](https://www.youtube.com/watch?v=PWePBteFeeE) V
 
-* 위에 다 완료 되었으면..
-* [Amsong-checker 프로젝트 View MUI 응용해서 UI 만들어가기 시작]
-* [Spring 서버단에서 데이터를 넘겨받아 React front 단에서 출력해보는 예제 따라해보기]
+위에 다 완료 되었으면..
+
+* <u>[Spring 서버단에서 데이터를 넘겨받아 React front 단에서 출력해보는 예제 따라해보기]</u> V
+* [생활코딩 React 기초 강의 따라하며 개념 다시 잡기](https://www.youtube.com/watch?v=AoMv0SIjZL8&list=PLuHgQVnccGMCOGstdDZvH41x0Vtvwyxu7&index=1) V
 * [Mongo DB로 하면 어떨지, 그리고 그 DB에 담길 Data 상의해보기]
-
+* [Amsong-checker 프로젝트 View MUI 응용해서 UI 만들어가기 시작]

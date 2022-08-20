@@ -1,10 +1,10 @@
-package com.sanggoe.amsongchecker;
+package com.sanggoe.pjtdaejanggan;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AmsongCheckerApplicationTests {
+class PjtDaejangganApplicationTests {
 
 	@Test
 	void contextLoads() {
