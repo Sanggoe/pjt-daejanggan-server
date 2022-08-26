@@ -1,36 +1,55 @@
-import { Button } from "@mui/material"
+import { Button, Stack } from "@mui/material"
 import { Box } from "@mui/system"
+import { useState } from "react"
 
 const boxDefault = {
-    height: 400,
-    border: "1px solid black",
-    padding: 0,
     maxWidth: 1000,
-    minWidth: 298,
-    m: 1
+    minHeight: 400,
+    border: "1px solid black",
 }
+// border: "1px solid black",
+
+const stackDefault = {
+    minWidth: 300,
+    margin: 3,
+    border: "1px solid black",
+}
+// border: "1px solid black",
 
 const menuItemDefault = {
-    borderRadius: 20,
-    minWidth: 200,
+    borderRadius: 50,
+    minHeight: 65,
     background: "#E6E6E6",
     color: "#7F7F7F",
-    fontSize: "18px",
+    fontSize: "25px",
 }
 
 export default function MenuItems(props) {
+    //const [toggle, setToggle] = useState(false);
+    const subContents = <h2>안녕하세용</h2>;
+
+    if
+
     return (
         <Box
+            display="flex"
             justifyContent="center"
             alignContent="center"
             sx={boxDefault}>
-            {props.groups.map((group) => (
-                <p>
-                    <Button variant="outlined" style={menuItemDefault} href="./">
-                        {group}
-                    </Button>
-                </p>
-            ))}
+            <Stack
+                spacing={2}
+                sx={stackDefault}>
+                {props.groups.map((group) => (
+                        <>
+                        <Button
+                            style={menuItemDefault}
+                            href="./">
+                            {group}
+                        </Button>
+                        {subContents}
+                        </>
+                ))}
+            </Stack>
         </Box>
     )
 }

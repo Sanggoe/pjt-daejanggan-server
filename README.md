@@ -677,4 +677,20 @@ export default function Login() {
 * <u>[Spring 서버단에서 데이터를 넘겨받아 React front 단에서 출력해보는 예제 따라해보기]</u> V
 * [생활코딩 React 기초 강의 따라하며 개념 다시 잡기](https://www.youtube.com/watch?v=AoMv0SIjZL8&list=PLuHgQVnccGMCOGstdDZvH41x0Vtvwyxu7&index=1) V
 * [Mongo DB로 하면 어떨지, 그리고 그 DB에 담길 Data 상의해보기]
-* [Amsong-checker 프로젝트 View MUI 응용해서 UI 만들어가기 시작]
+* [Amsong-checker 프로젝트 View MUI 응용해서 UI 만들어가기 시작] Go!
+
+
+
+## Front UI 구성 시작
+
+* [모바일에서 화면 크기 Issue](https://velog.io/@eunddodi/React-%EB%AA%A8%EB%B0%94%EC%9D%BC-%EC%9B%B9-%EC%95%B1-100vh-%EC%8B%A4%EC%A0%9C-%ED%99%94%EB%A9%B4-%ED%81%AC%EA%B8%B0%EB%A1%9C-%EB%A7%9E%EC%B6%94%EA%B8%B0)
+* [리액트 개발 시 chrome창 더 줄이기](https://brianshim.com/webtricks/chrome-browser-window-that-you-can-make-narrow/)
+* [MUI Button Custom Style 적용관련 질문 - stack overflow](https://stackoverflow.com/questions/46486565/mui-customize-button-color)
+* [Button 정렬](https://www.youtube.com/watch?v=sKeW8r_mDS0)
+* [React Router](https://www.youtube.com/watch?v=WLdbsl9UwDc)
+* [React Button onclick](https://coding-hyeok.tistory.com/8)
+* [React 회원가입 구현해보기](https://phrygia.github.io/react/2021-11-25-mui-react/)
+* [React로 양식 Form UI 구현해보기](https://www.daleseo.com/react-forms/)
+* [React + Spring To-do app 만들기 프로젝트 예제](https://bedmil.tistory.com/36?category=380819)
+* [React to spring data 전송](https://cookinghoil.tistory.com/106)
+* [React - Spring data 주고받기 예제 따라해보자](https://smcnewbie.tistory.com/11)

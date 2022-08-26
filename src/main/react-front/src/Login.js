@@ -18,7 +18,7 @@ export default function Login() {
                     Sign in
                 </Typography>
 
-                <TextField label="Email Address"
+                <TextField label="ID"
                     margin='normal'
                     required
                     fullWidth

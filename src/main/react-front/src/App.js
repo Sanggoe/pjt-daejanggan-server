@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import DataTest from './DataTest';
 import Login from './Login';
 import Menu from './Menu';
 
 
 function App() {
   
-  function setScreenSize() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-  }
-  useEffect(() => {
-    setScreenSize();
-  });
+  // function setScreenSize() {
+  //   let vh = window.innerHeight * 0.01;
+  //   document.documentElement.style.setProperty("--vh", `${vh}px`);
+  // }
+  // useEffect(() => {
+  //   setScreenSize();
+  // });
 
   return (
     <Menu/>
     );
-}// <Login/>
+}// <Login/> 
 
 export default App;

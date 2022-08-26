@@ -2,17 +2,16 @@ import { Button, ButtonGroup } from '@mui/material';
 import { Box } from '@mui/system';
 
 const headerBoxDefault = {
-    height: 30,
-    border: "1px solid black",
-    padding: 0,
     maxWidth: 1000,
-    minWidth: 298,
-    m: 1
+    height: 45,
+    border: "1px solid black",
 }
+// border: "1px solid black",
 
 const headerButtonDefault = {
-    height: 20,
-    fontSize: "12px"
+    height: 40,
+    fontSize: "15px",
+    color: "black",
 }
 
 export default function MenuHeader() {
