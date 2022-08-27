@@ -23,33 +23,17 @@ export default function MenuNav(props) {
             justifyContent="center"
             alignContent="center"
             sx={boxDefault}>
-            <Button
-                id="암송"
-                style={menuButtonDefault}
-                onClick={(event) => {
-                    event.preventDefault();
-                    props.onChangeMode1();
-                }}>
-                <b>암송</b>
-            </Button>
-            <Button
-                id="통계"
-                style={menuButtonDefault}
-                onClick={(event) => {
-                    event.preventDefault();
-                    props.onChangeMode2();
-                }}>
-                <b>통계</b>
-            </Button>
-            <Button
-                id="업적"
-                style={menuButtonDefault}
-                onClick={(event) => {
-                    event.preventDefault();
-                    props.onChangeMode3();
-                }}>
-                <b>업적</b>
-            </Button>
+            {props.menus.map((menu) => (
+                <Button
+                    id={props.menus}
+                    style={menuButtonDefault}
+                    onClick={(event) => {
+                        event.preventDefault();
+                        props.onChangeMode(menu);
+                    }}>
+                    <b>{menu}</b>
+                </Button>
+            ))}
         </Box>
     )
 }
