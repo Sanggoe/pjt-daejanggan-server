@@ -1,49 +1,57 @@
-import { Box, Button } from "@mui/material"
+import { Button } from "@mui/material"
 
 const footerBoxDefault = {
     maxWidth: 1000,
-    height: 60,
-    background: "white",
     position: "fixed",
     bottom: 0,
     width: "100%",
     border: "1px solid black",
-    margin: "0px 50px 0px 0px",
+    background: "#FFE181",
 }
 
-const footerButtonDefault = {
+const footerButtonDefault2 = {
+    minWidth: 200,
+    width: "50%",
+    color: "black",
+    background: "white",
+    fontSize: "20px",
+    borderRadius: 0,
+}
+
+const footerButtonDefault1 = {
     minWidth: 200,
     width: "100%",
     color: "black",
     background: "white",
-    fontSize: "18px",
+    fontSize: "20px",
+    borderRadius: 0,
 }
 
-const buttonBackground = {
-    background: "#FFE181",
-    borderRadius: 5,
-}
+export default function MenuFooter(props) {
 
-export default function MenuFooter() {
-    return (
-        <Box
-            fixed
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            sx={footerBoxDefault}>
-            <div style={buttonBackground}>
+    if (props.menu === 1) {
+        return (
+            <div
+                style={footerBoxDefault}>
                 <Button
-                    sx={footerButtonDefault}>
-                    <b>암송하러 가기</b>
+                    sx={footerButtonDefault2}>
+                    <b>확인하러 가기</b>
+                </Button>
+                <Button
+                    sx={footerButtonDefault2}>
+                    <b>정리하러 가기</b>
                 </Button>
             </div>
-            <div style={buttonBackground}>
+        )
+    } else if (props.menu === 2) {
+        return (
+            <div
+                style={footerBoxDefault}>
                 <Button
-                    sx={footerButtonDefault}>
-                    <b>점검하러 가기</b>
+                    sx={footerButtonDefault1}>
+                    <b>보러 가기</b>
                 </Button>
             </div>
-        </Box>
-    )
+        )
+    }
 }

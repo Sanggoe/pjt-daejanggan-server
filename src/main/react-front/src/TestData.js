@@ -36,7 +36,7 @@ function DataReceive(props) {
 ))}
 */
 
-export default function DataTest() {
+export default function TestData() {
 
     const [datas, setDatas] = useState([]);
 
