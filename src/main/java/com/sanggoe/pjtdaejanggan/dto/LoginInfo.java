@@ -7,15 +7,18 @@ import lombok.Setter;
 @Setter
 public class LoginInfo {
     private String id;
-    private String pw;
+    private String password;
 
-    public LoginInfo(String id, String pw) {
+    public LoginInfo(String id, String password) {
         this.id = id;
-        this.pw = pw;
+        this.password = password;
     }
 
     @Override
     public String toString() {
-        return "LoginInfo [" + "id='" + id + ", pw='" + pw + "]";
+        return "LoginInfo{\n" +
+                "id:" + id +
+                ",\npassword:" + password +
+                "\n}";
     }
 }

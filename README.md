@@ -1,6 +1,7 @@
 # PJT_대장간
 
 * 성경 구절 암송 체킹 사이트 구축 프로젝트
+* [React-front 프로젝트 레포지토리](https://github.com/Sanggoe/pjt-daejanggan-front)
 
 
 
