@@ -39,52 +39,9 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.30'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-
-
-/*
-def frontendDir = "$projectDir/src/main/react-front"
-
-sourceSets {
-	main {
-		resources { srcDirs = ["$projectDir/src/main/resources"]
-		}
-	}
-}
-
-processResources { dependsOn "copyReactBuildFiles" }
-
-task installReact(type: Exec) {
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine "npm.cmd", "audit", "fix"
-		commandLine 'npm.cmd', 'install' }
-	else {
-		commandLine "npm", "audit", "fix" commandLine 'npm', 'install'
-	}
-}
-
-task buildReact(type: Exec) {
-	dependsOn "installReact"
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine "npm.cmd", "run-script", "build"
-	} else {
-		commandLine "npm", "run-script", "build"
-	}
-}
-
-task copyReactBuildFiles(type: Copy) {
-	dependsOn "buildReact"
-	from "$frontendDir/build"
-	into "$projectDir/src/main/resources/static"
-}*/

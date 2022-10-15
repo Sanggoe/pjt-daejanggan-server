@@ -1,6 +1,6 @@
+/*
 package com.sanggoe.pjtdaejanggan.repository;
 
-import com.sanggoe.pjtdaejanggan.dto.VerseInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 
@@ -30,3 +30,4 @@ public class DbManager {
     }
 
 }
+*/

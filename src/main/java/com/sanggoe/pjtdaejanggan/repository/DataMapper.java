@@ -1,6 +1,5 @@
+/*
 package com.sanggoe.pjtdaejanggan.repository;
-
-import com.sanggoe.pjtdaejanggan.dto.VerseInfo;
 
 import java.util.List;
 
@@ -12,3 +11,4 @@ public interface DataMapper {
 
     List<VerseInfo> findByHead(String head);
 }
+*/

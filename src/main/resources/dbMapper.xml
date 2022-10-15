@@ -4,9 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanggoe.pjtdaejanggan.repository.DataMapper">
     <insert id="upsertVerse">
-
-
-
         INSERT INTO title_meta (id, title, frequency, related, updatetime)
         VALUES (#{id}, #{title}, #{frequency}, #{related}, #{updatetime}) on duplicate key
         e id=#{id}, title=#{title}, frequency=#{frequency}, related=#{related}, updatetime=#{updatetime}
