@@ -34,6 +34,12 @@ public class UserDto { // 회원가입 시 사용할 Dto
     public static UserDto from(User user) {
         if (user == null) return null;
 
-        return UserDto.builder().username(user.getUsername()).nickname(user.getNickname()).authorityDtoSet(user.getAuthorities().stream().map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build()).collect(Collectors.toSet())).build();
+        return UserDto.builder()
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .authorityDtoSet(user.getAuthorities().stream()
+                        .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
+                        .collect(Collectors.toSet()))
+                .build();
     }
 }

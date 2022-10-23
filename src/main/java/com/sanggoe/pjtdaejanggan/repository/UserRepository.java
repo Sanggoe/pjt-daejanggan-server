@@ -14,7 +14,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 위 어노테이션은, 쿼리 수행 시 Lazy 조회가 아닌 Eager 조회로 즉시 수행.
     // 되도록 Lazy 조회를 사용하는 편이 낫다고는 하는데.. 지금은 많은 데이터 호출이 아니니까 상관 없을 듯.
     Optional<User> findOneWithAuthoritiesByUsername(String username); // username기준으로, user 정보를 가져올 때 권한 정보도 같이 가져온다.
-
-    Optional<User> findVersesWithAuthoritiesByUsername(String username); // username기준으로, user 정보를 가져올 때 권한 정보도 같이 가져온다.
-
 }

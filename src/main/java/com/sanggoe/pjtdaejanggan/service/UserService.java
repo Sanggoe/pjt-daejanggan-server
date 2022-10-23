@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.Optional;
 
 // 회원가입 및 유저 정보 조회 등의 기능을 위한 클래스
 @Service
@@ -68,6 +67,11 @@ public class UserService {
         throw new NotFoundMemberException("존재하지 않는 유저입니다."); // 있으면 Exception 발생
     }
 
+//    public PracticeResponseDto getVerses(PracticeRequestDto versesHeadListDto) { /**  수정 중... 어떻게 해야할까요??  */
+//        versesHeadListDto.getHeadList().forEach(s -> System.out.println(s));
+//
+//        return PracticeResponseDto.from(userRepository.findVersesByHead(versesHeadListDto.getHeadList()).orElse(null));
+//    }
 
     // username을 파라미터로 받아서 어떤 username이든 그에 해당하는 user객체와 권한 정보를 가져올 수 있는 메서드
     @Transactional(readOnly = true)
@@ -84,6 +88,7 @@ public class UserService {
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
     }
+
 }
 
 // 위 두 메서드의 허용 권한을 다르게 하여 권한검증을 다루는 것!!

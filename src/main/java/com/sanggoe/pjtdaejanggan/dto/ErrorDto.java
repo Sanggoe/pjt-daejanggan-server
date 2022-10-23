@@ -3,8 +3,10 @@ package com.sanggoe.pjtdaejanggan.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import org.springframework.validation.FieldError;
 
+@Getter
 public class ErrorDto {
     private final int status;
     private final String message;
@@ -15,20 +17,8 @@ public class ErrorDto {
         this.message = message;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
     public void addFieldError(String objectName, String path, String message) {
         FieldError error = new FieldError(objectName, path, message);
         fieldErrors.add(error);
-    }
-
-    public List<FieldError> getFieldErrors() {
-        return fieldErrors;
     }
 }

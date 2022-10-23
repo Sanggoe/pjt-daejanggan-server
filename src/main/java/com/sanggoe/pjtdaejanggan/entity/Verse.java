@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Verses {
+public class Verse {
 
     @Id
     @Column(name = "key_id") // 자동 증가되는 primary key
