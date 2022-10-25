@@ -1,27 +1,35 @@
 package com.sanggoe.pjtdaejanggan.service;
 
+import com.sanggoe.pjtdaejanggan.dto.PracticeRequestDto;
+import com.sanggoe.pjtdaejanggan.dto.PracticeResponseDto;
 import com.sanggoe.pjtdaejanggan.dto.UserDto;
 import com.sanggoe.pjtdaejanggan.entity.Authority;
 import com.sanggoe.pjtdaejanggan.entity.User;
+import com.sanggoe.pjtdaejanggan.entity.Verse;
 import com.sanggoe.pjtdaejanggan.exception.DuplicateMemberException;
 import com.sanggoe.pjtdaejanggan.exception.NotFoundMemberException;
+import com.sanggoe.pjtdaejanggan.exception.NotFountVerseException;
 import com.sanggoe.pjtdaejanggan.repository.UserRepository;
+//import com.sanggoe.pjtdaejanggan.repository.VerseRepository;
 import com.sanggoe.pjtdaejanggan.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 // 회원가입 및 유저 정보 조회 등의 기능을 위한 클래스
 @Service
 public class UserService {
     private final UserRepository userRepository;
+//    private final VerseRepository verseRepository;
     private final PasswordEncoder passwordEncoder;
 
     // userRepository와 passwordEncoder를 주입받는다.
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, /*VerseRepository verseRepository,*/ PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+//        this.verseRepository = verseRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -67,12 +75,6 @@ public class UserService {
         throw new NotFoundMemberException("존재하지 않는 유저입니다."); // 있으면 Exception 발생
     }
 
-//    public PracticeResponseDto getVerses(PracticeRequestDto versesHeadListDto) { /**  수정 중... 어떻게 해야할까요??  */
-//        versesHeadListDto.getHeadList().forEach(s -> System.out.println(s));
-//
-//        return PracticeResponseDto.from(userRepository.findVersesByHead(versesHeadListDto.getHeadList()).orElse(null));
-//    }
-
     // username을 파라미터로 받아서 어떤 username이든 그에 해당하는 user객체와 권한 정보를 가져올 수 있는 메서드
     @Transactional(readOnly = true)
     public UserDto getUserWithAuthorities(String username) {
@@ -89,6 +91,12 @@ public class UserService {
         );
     }
 
+//    @Transactional(readOnly = true)
+//    public PracticeResponseDto getPracticeVerses(PracticeRequestDto practiceRequestDto) {
+//        List<Verse> verses = verseRepository.findAllByHead(practiceRequestDto.getHeadList());
+//        if (verses == null) {
+//            throw new NotFountVerseException("존재하지 않는 구절입니다."); // 있으면 Exception 발생
+//        }
+//        return PracticeResponseDto.from(verses);
+//    }
 }
-
-// 위 두 메서드의 허용 권한을 다르게 하여 권한검증을 다루는 것!!

@@ -91,6 +91,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/signup").permitAll()
+                .antMatchers("/api/hello").permitAll()
                 .anyRequest().authenticated() // 그 외 요청은 모두 인증이 되어야 가능
 
                 // jwt 필터를 addFilterBefore로 등록했던 Jwt Security config 클래스에 토큰 제공자를 주입시켜 적용!!

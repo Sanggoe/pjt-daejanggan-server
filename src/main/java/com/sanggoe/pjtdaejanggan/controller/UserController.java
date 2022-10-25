@@ -1,15 +1,19 @@
 package com.sanggoe.pjtdaejanggan.controller;
 
+import com.sanggoe.pjtdaejanggan.dto.CheckingContentsRequestDto;
 import com.sanggoe.pjtdaejanggan.dto.CheckingChapverseRequestDto;
-import com.sanggoe.pjtdaejanggan._will_add_to_dto.ContentVerseCheckingDto;
 import com.sanggoe.pjtdaejanggan.dto.*;
 import com.sanggoe.pjtdaejanggan.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -25,14 +30,17 @@ public class UserController {
 
     /**
      * ******** Test Requests ********
-     *
-     * @GetMapping("/hello") public ResponseEntity<String> hello() {
-     * return ResponseEntity.ok("hello");
-     * }
-     * @PostMapping("/test-redirect") public void testRedirect(HttpServletResponse response) throws IOException {
-     * response.sendRedirect("/api/user");
-     * }
-     * *******************************
+     */
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("hello");
+    }
+
+    @PostMapping("/test-redirect")
+    public void testRedirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/user");
+    }
+    /* *******************************
      */
 
     // UserDto 객체를 파라미터로 받아서 userService의 signup 메서드를 수행
@@ -56,23 +64,24 @@ public class UserController {
     public ResponseEntity<UserDto> changePassword(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.changePassword(userDto));
     }
+
     /**
      * **********************************
      */
 
-    // 선택한 headListDto 객체를 파라미터로 받아 해당하는 Verse들을 DB에서 꺼내 반환하는 getVersesForPractice 메서드 실행
     @PostMapping("/practice-verses")
     public ResponseEntity<PracticeResponseDto> getVersesForPractice(@Valid @RequestBody PracticeRequestDto practiceRequestDto) {
-
+//        return ResponseEntity.ok(userService.getPracticeVerses(practiceRequestDto));
         /**
          * 이제 이걸 Service로 구현해야 합니다~~
-        */
+         */
         VerseDto verseDto1 = VerseDto.builder()
                 .chapverse("야고보서 1:19")
                 .theme("180")
                 .head("2. 사랑 안에서 자라감")
                 .subhead("A. 사랑으로 말함")
-                .title("5.경청함")
+//                .title("5.경청함")
+                .title("<스프링 요청으로 Dummy Data 받아옴. DB 조회 아님>")
                 .contents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
                 .build();
 
@@ -96,6 +105,7 @@ public class UserController {
 
         VerseDto verseDto4 = VerseDto.builder()
                 .chapverse("로마서 5:8")
+
                 .theme("60구절")
                 .head("B - 그리스도를 전파함")
                 .subhead("")
@@ -121,7 +131,6 @@ public class UserController {
                 .contents("또 증거는 이것이니 하나님이 우리에게 영생을 주신것과 이 생명이 그의 아들안에 있는 그것이니라 아들이 있는 자 에게는 생명이 있고 하나님의 아들이 없는 자에게는 생명이 없느니라")
                 .build();
 
-
         List<VerseDto> versesDto = new ArrayList<>();
         versesDto.add(verseDto1);
         versesDto.add(verseDto2);
@@ -131,13 +140,15 @@ public class UserController {
         versesDto.add(verseDto6);
 
         return ResponseEntity.ok(PracticeResponseDto.builder().verses(versesDto).build());
-//        return ResponseEntity.ok(userService.getVerses(practiceRequestDto));
+        // 선택한 headListDto 객체를 파라미터로 받아 해당하는 Verse들을 DB에서 꺼내 반환하는 getVersesForPractice 메서드 실행
     }
 
-    // CheckingInfoDto 객체를 파라미터로 받아서 userService의 getCheckingVerses 메서드를 수행한다
+    // CheckingInfoResponseDto 객체를 파라미터로 받아서 userService의 getCheckingVerses 메서드를 수행한다
     // 점검 정보를 request로 받아 점검 구절 선별 결과를 response로 보내는 것
     @PostMapping("/checking-verses")
     public ResponseEntity<CheckingInfoResponseDto> getCheckingVerses(@Valid @RequestBody CheckingInfoRequestDto checkingInfoRequestDto) {
+        logger.debug(checkingInfoRequestDto.toString());
+
         /**
          * 이제 이걸 Service로 구현해야 합니다~~
          */
@@ -148,7 +159,8 @@ public class UserController {
                 .theme("180")
                 .head("2. 사랑 안에서 자라감")
                 .subhead("A. 사랑으로 말함")
-                .title("5.경청함")
+//                .title("5.경청함")
+                .title("<스프링 요청으로 Dummy Data 받아옴. DB 조회 아님>")
                 .contents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
                 .build();
 
@@ -219,38 +231,57 @@ public class UserController {
         return ResponseEntity.ok(CheckingInfoResponseDto.builder().verses(versesCheckingDto).build());
 
         // ResponseEntity.ok(userService.getCheckingVerses() Service에서 구현해야 할 듯 .get());
-        // 그리고 get 함수는 CheckingVersesDto 형태의 JSON 데이터를 반환함
+        // 그리고 get 함수는 List<CurrentVerseDto> 형태의  JSON 데이터를 반환함
     }
-
-
-
 
 
     // CheckingChapverseRequestDto 객체를 파라미터로 받아서 userService의 getChapterCheckingResult 메서드를 수행한다
     // 장절 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
-    @PostMapping("/chapter-checking")
-    public ResponseEntity<Object> getChapterCheckingResult(@Valid @RequestBody CheckingChapverseRequestDto checkingChapverseRequestDto) {
-        return null;
+    @PostMapping("/chapverse-checking")
+    public ResponseEntity<CheckingChapverseResponseDto> getChapverseCheckingResult(@Valid @RequestBody CheckingChapverseRequestDto checkingChapverseRequestDto) {
+        logger.debug(checkingChapverseRequestDto.toString());
+
+        return ResponseEntity.ok(CheckingChapverseResponseDto.builder()
+                .resultTitle("경청함")
+                .isCorrectTitle(true)
+                .resultChapterName("야고보서")
+                .isCorrectChapterName(true)
+                .resultChapter("1")
+                .isCorrectChapter(true)
+                .resultVerse("19")
+                .isCorrectVerse(true)
+                .build());
         // ResponseEntity.ok(userService.getChapterCheckingResult() Service에서 구현해야 할 듯 .get());
-        // 그리고 get 함수는 ChapterVerseCheckingResultDto 형태의 JSON 데이터를 반환함
+        // 그리고 get 함수는 CheckingChapverseResponseDto 형태의 JSON 데이터를 반환함
     }
 
-    // ContentVerseCheckingDto 객체를 파라미터로 받아서 userService의 getChapterCheckingResult 메서드를 수행한다
+    // CheckingContentsRequestDto 객체를 파라미터로 받아서 userService의 getChapterCheckingResult 메서드를 수행한다
     // 내용 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
-    @PostMapping("/content-checking")
+    @PostMapping("/contents-checking")
     @PreAuthorize("hasAnyRole('USER','ADMIN')") // PreAuthorize 어노테이션을 통해서, 두 권한을 모두 호출할 수 있는 API이다.
-    public ResponseEntity<Object> getContentCheckingResult(@Valid @RequestBody ContentVerseCheckingDto contentVerseCheckingDto) {
-        return null;
+    public ResponseEntity<CheckingContentsResponseDto> getContentCheckingResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
+        logger.debug(checkingContentsRequestDto.toString());
+
+        return ResponseEntity.ok(CheckingContentsResponseDto.builder()
+                .mode("result")
+                .resultTitle("경청함")
+                .isCorrectTitle(true)
+                .resultContents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
+                .inputContents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
+                .hint(0)
+                .minus(0)
+                .score(10)
+                .build());
         // ResponseEntity.ok(userService.getContentCheckingResult() Service에서 구현해야 할 듯 .get());
-        // 그리고 get 함수는 ContentVerseCheckingResultDto 형태의 JSON 데이터를 반환함
+        // 그리고 get 함수는 CheckingContentsResponseDto 형태의 JSON 데이터를 반환함
     }
+
 
     // 좀 마무리 되면... '결과'를 전부 서버로 보내 DB에 저장하는 request mapping 도 필요함.
 
-
-    @GetMapping("/user/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN')") // PreAuthorize 어노테이션을 통해서, ADMIN 권한만 호출할 수 있는 API이다.
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
-    }
+//    @GetMapping("/user/{username}")
+//    @PreAuthorize("hasAnyRole('ADMIN')") // PreAuthorize 어노테이션을 통해서, ADMIN 권한만 호출할 수 있는 API이다.
+//    public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
+//        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
+//    }
 }

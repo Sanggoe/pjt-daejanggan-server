@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckingChapverseRequestDto {
+public class CheckingContentsRequestDto {
 
     @NotNull
     private String theme; // DB 찾기용
@@ -18,14 +18,20 @@ public class CheckingChapverseRequestDto {
     private String chapverse; // DB 찾기용
 
     @NotNull
-    private String inputTitle;
+    private String title;
 
     @NotNull
-    private String inputChapterName;
+    private String contents;
 
     @NotNull
-    private String inputChapter;
+    private String hintWord;
 
     @NotNull
-    private String inputVerse;
+    private int currentHint;
+
+    @NotNull
+    private int currentMinus;
+
+    @NotNull
+    private int currentScore;
 }
