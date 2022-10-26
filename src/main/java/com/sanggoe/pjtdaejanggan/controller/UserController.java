@@ -40,7 +40,9 @@ public class UserController {
     public void testRedirect(HttpServletResponse response) throws IOException {
         response.sendRedirect("/api/user");
     }
-    /* *******************************
+
+    /**
+     * *****************************
      */
 
     // UserDto 객체를 파라미터로 받아서 userService의 signup 메서드를 수행
@@ -211,12 +213,34 @@ public class UserController {
         CurrentVerseDto currentVerseDto6 = CurrentVerseDto.builder()
                 .index(5)
                 .verseType(0)
-                .chapverse("요한일서 5:11~12")
-                .theme("LOA")
-                .head("그리스도인의 확신")
-                .subhead("")
-                .title("1. 구원의 확신")
-                .contents("또 증거는 이것이니 하나님이 우리에게 영생을 주신것과 이 생명이 그의 아들안에 있는 그것이니라 아들이 있는 자 에게는 생명이 있고 하나님의 아들이 없는 자에게는 생명이 없느니라")
+                .chapverse("베드로전서 2:9")
+                .theme("180")
+                .head("5. 그리스도를 증거함")
+                .subhead("3. 그리스도 안에 있는 신자의 위치")
+                .title("6.제사장이 됨")
+                .contents("오직 너희는 택하신 족속이요 왕 같은 제사장들이요 거룩한 나라요 그의 소유된 백성이니 이는 너희를 어두운 데서 불러내어 그의 기이한 빛에 들어가게 하신 자의 아름다운 덕을 선전하게 하려 하심이라")
+                .build();
+
+        CurrentVerseDto currentVerseDto7 = CurrentVerseDto.builder()
+                .index(6)
+                .verseType(0)
+                .chapverse("베드로전서 2:9")
+                .theme("180")
+                .head("5. 그리스도를 증거함")
+                .subhead("3. 그리스도 안에 있는 신자의 위치")
+                .title("6.제사장이 됨")
+                .contents("오직 너희는 택하신 족속이요 왕 같은 제사장들이요 거룩한 나라요 그의 소유된 백성이니 이는 너희를 어두운 데서 불러내어 그의 기이한 빛에 들어가게 하신 자의 아름다운 덕을 선전하게 하려 하심이라")
+                .build();
+
+        CurrentVerseDto currentVerseDto8 = CurrentVerseDto.builder()
+                .index(7)
+                .verseType(0)
+                .chapverse("베드로전서 2:9")
+                .theme("180")
+                .head("5. 그리스도를 증거함")
+                .subhead("3. 그리스도 안에 있는 신자의 위치")
+                .title("6.제사장이 됨")
+                .contents("오직 너희는 택하신 족속이요 왕 같은 제사장들이요 거룩한 나라요 그의 소유된 백성이니 이는 너희를 어두운 데서 불러내어 그의 기이한 빛에 들어가게 하신 자의 아름다운 덕을 선전하게 하려 하심이라")
                 .build();
 
 
@@ -227,6 +251,8 @@ public class UserController {
         versesCheckingDto.add(currentVerseDto4);
         versesCheckingDto.add(currentVerseDto5);
         versesCheckingDto.add(currentVerseDto6);
+        versesCheckingDto.add(currentVerseDto7);
+        versesCheckingDto.add(currentVerseDto8);
 
         return ResponseEntity.ok(CheckingInfoResponseDto.builder().verses(versesCheckingDto).build());
 
@@ -243,13 +269,13 @@ public class UserController {
 
         return ResponseEntity.ok(CheckingChapverseResponseDto.builder()
                 .resultTitle("경청함")
-                .isCorrectTitle(true)
+                .correctTitle(true)
                 .resultChapterName("야고보서")
-                .isCorrectChapterName(true)
+                .correctChapterName(true)
                 .resultChapter("1")
-                .isCorrectChapter(true)
+                .correctChapter(true)
                 .resultVerse("19")
-                .isCorrectVerse(true)
+                .correctVerse(true)
                 .build());
         // ResponseEntity.ok(userService.getChapterCheckingResult() Service에서 구현해야 할 듯 .get());
         // 그리고 get 함수는 CheckingChapverseResponseDto 형태의 JSON 데이터를 반환함
@@ -264,10 +290,10 @@ public class UserController {
 
         return ResponseEntity.ok(CheckingContentsResponseDto.builder()
                 .mode("result")
-                .resultTitle("경청함")
-                .isCorrectTitle(true)
-                .resultContents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
-                .inputContents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
+                .resultTitle("기도응답의 확신")
+                .correctTitle(true)
+                .resultContents("")
+                .inputContents("지금까지는 너희가 내 이름으로 아무것도 구하지 아니하였으나 구하라 그리하면 받으리니 너희 기쁨이 충만하리라")
                 .hint(0)
                 .minus(0)
                 .score(10)

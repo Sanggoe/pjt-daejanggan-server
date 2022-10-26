@@ -19,7 +19,7 @@ public class CheckingContentsResponseDto {
     private String resultTitle;
 
     @NotNull
-    private boolean isCorrectTitle;
+    private boolean correctTitle;
 
     @NotNull
     private String resultContents;

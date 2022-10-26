@@ -3,6 +3,7 @@ package com.sanggoe.pjtdaejanggan.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,13 +19,13 @@ public class CheckingContentsRequestDto {
     private String chapverse; // DB 찾기용
 
     @NotNull
-    private String title;
+    private String inputTitle;
 
     @NotNull
-    private String contents;
+    private String inputContents;
 
     @NotNull
-    private String hintWord;
+    private List<String> hintWord;
 
     @NotNull
     private int currentHint;
