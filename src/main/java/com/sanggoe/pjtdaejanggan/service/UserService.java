@@ -9,8 +9,8 @@ import com.sanggoe.pjtdaejanggan.entity.Verse;
 import com.sanggoe.pjtdaejanggan.exception.DuplicateMemberException;
 import com.sanggoe.pjtdaejanggan.exception.NotFoundMemberException;
 import com.sanggoe.pjtdaejanggan.exception.NotFountVerseException;
+import com.sanggoe.pjtdaejanggan.repository.JpaVerseRepository;
 import com.sanggoe.pjtdaejanggan.repository.UserRepository;
-//import com.sanggoe.pjtdaejanggan.repository.VerseRepository;
 import com.sanggoe.pjtdaejanggan.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 // 회원가입 및 유저 정보 조회 등의 기능을 위한 클래스
 @Service
 public class UserService {
     private final UserRepository userRepository;
-//    private final VerseRepository verseRepository;
+    private final JpaVerseRepository verseRepository;
     private final PasswordEncoder passwordEncoder;
 
     // userRepository와 passwordEncoder를 주입받는다.
-    public UserService(UserRepository userRepository, /*VerseRepository verseRepository,*/ PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, JpaVerseRepository verseRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-//        this.verseRepository = verseRepository;
+        this.verseRepository = verseRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -91,12 +92,12 @@ public class UserService {
         );
     }
 
-//    @Transactional(readOnly = true)
-//    public PracticeResponseDto getPracticeVerses(PracticeRequestDto practiceRequestDto) {
-//        List<Verse> verses = verseRepository.findAllByHead(practiceRequestDto.getHeadList());
-//        if (verses == null) {
-//            throw new NotFountVerseException("존재하지 않는 구절입니다."); // 있으면 Exception 발생
-//        }
-//        return PracticeResponseDto.from(verses);
-//    }
+    @Transactional(readOnly = true)
+    public PracticeResponseDto getPracticeVerses(PracticeRequestDto practiceRequestDto) {
+        List<Verse> verses = verseRepository.findByHead(practiceRequestDto.getHeadList()).orElse(null);
+        if (verses == null) {
+            throw new NotFountVerseException("존재하지 않는 구절입니다."); // 있으면 Exception 발생
+        }
+        return PracticeResponseDto.from(verses);
+    }
 }

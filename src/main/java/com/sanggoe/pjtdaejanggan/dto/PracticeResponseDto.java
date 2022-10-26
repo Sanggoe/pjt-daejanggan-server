@@ -6,6 +6,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -18,23 +19,22 @@ public class PracticeResponseDto {
     @NotNull
     private List<VerseDto> verses = new ArrayList<>();
 
-    public static PracticeResponseDto from(List<Verse> verses) {
-        if (verses == null)
+    public static PracticeResponseDto from(List<Verse> verseList) {
+        if (verseList == null)
             return null;
 
-        List<VerseDto> versesDto = new ArrayList<>();
-        verses.stream().map(verseDto -> {
-            return versesDto.add(VerseDto.builder()
-                    .chapverse(verseDto.getChapverse())
-                    .theme(verseDto.getTheme())
-                    .head(verseDto.getHead())
-                    .subhead(verseDto.getSubhead())
-                    .title(verseDto.getTitle())
-                    .contents(verseDto.getContents())
-                    .build()
-            );
-        });
+        List<VerseDto> versesDto = verseList.stream()
+                .map(verse -> VerseDto.builder()
+                        .chapverse(verse.getChapverse())
+                        .theme(verse.getTheme())
+                        .head(verse.getHead())
+                        .subhead(verse.getSubhead())
+                        .title(verse.getTitle())
+                        .contents(verse.getContents())
+                        .build())
+                .collect(Collectors.toList());
 
-        return PracticeResponseDto.builder().verses(versesDto).build();
+        return PracticeResponseDto.builder()
+                .verses(versesDto).build();
     }
 }

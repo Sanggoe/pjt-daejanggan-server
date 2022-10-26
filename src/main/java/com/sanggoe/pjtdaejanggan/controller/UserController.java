@@ -73,75 +73,75 @@ public class UserController {
 
     @PostMapping("/practice-verses")
     public ResponseEntity<PracticeResponseDto> getVersesForPractice(@Valid @RequestBody PracticeRequestDto practiceRequestDto) {
-//        return ResponseEntity.ok(userService.getPracticeVerses(practiceRequestDto));
+        return ResponseEntity.ok(userService.getPracticeVerses(practiceRequestDto));
         /**
          * 이제 이걸 Service로 구현해야 합니다~~
          */
-        VerseDto verseDto1 = VerseDto.builder()
-                .chapverse("야고보서 1:19")
-                .theme("180")
-                .head("2. 사랑 안에서 자라감")
-                .subhead("A. 사랑으로 말함")
-//                .title("5.경청함")
-                .title("<스프링 요청으로 Dummy Data 받아옴. DB 조회 아님>")
-                .contents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
-                .build();
+//        VerseDto verseDto1 = VerseDto.builder()
+//                .chapverse("야고보서 1:19")
+//                .theme("180")
+//                .head("2. 사랑 안에서 자라감")
+//                .subhead("A. 사랑으로 말함")
+////                .title("5.경청함")
+//                .title("<스프링 요청으로 Dummy Data 받아옴. DB 조회 아님>")
+//                .contents("내 사랑하는 형제들아 너희가 알거니와 사람마다 듣기는 속히 하고 말하기는 더디 하며 성내기도 더디 하라")
+//                .build();
+//
+//        VerseDto verseDto2 = VerseDto.builder()
+//                .chapverse("요한복음 15:5")
+//                .theme("DEP")
+//                .head("2. Quiet Time")
+//                .subhead("2-1. 왜 Quiet Time을 가져야하는가?")
+//                .title("3. 축복의 약속")
+//                .contents("나는 포도나무요 너희는 가지니 저가 내 안에 내가 저 안에 있으면 이 사람은 과실을 많이 맺나니 나를 떠나서는 너희가 아무것도 할 수 없음이라")
+//                .build();
+//
+//        VerseDto verseDto3 = VerseDto.builder()
+//                .chapverse("요한복음 16:24")
+//                .theme("LOA")
+//                .head("그리스도인의 확신")
+//                .subhead("")
+//                .title("2. 기도응답의 확신")
+//                .contents("지금까지는 너희가 내 이름으로 아무것도 구하지 아니하였으나 구하라 그리하면 받으리니 너희 기쁨이 충만하리라")
+//                .build();
+//
+//        VerseDto verseDto4 = VerseDto.builder()
+//                .chapverse("로마서 5:8")
+//
+//                .theme("60구절")
+//                .head("B - 그리스도를 전파함")
+//                .subhead("")
+//                .title("3. 그리스도가 형벌을 받음")
+//                .contents("우리가 아직 죄인 되었을 때에 그리스도께서 우리를 위하여 죽으심으로 하나님께서 우리에게 대한 자기의 사랑을 확증하셨느니라")
+//                .build();
+//
+//        VerseDto verseDto5 = VerseDto.builder()
+//                .chapverse("베드로전서 2:9")
+//                .theme("180")
+//                .head("5. 그리스도를 증거함")
+//                .subhead("3. 그리스도 안에 있는 신자의 위치")
+//                .title("6.제사장이 됨")
+//                .contents("오직 너희는 택하신 족속이요 왕 같은 제사장들이요 거룩한 나라요 그의 소유된 백성이니 이는 너희를 어두운 데서 불러내어 그의 기이한 빛에 들어가게 하신 자의 아름다운 덕을 선전하게 하려 하심이라")
+//                .build();
+//
+//        VerseDto verseDto6 = VerseDto.builder()
+//                .chapverse("요한일서 5:11~12")
+//                .theme("LOA")
+//                .head("그리스도인의 확신")
+//                .subhead("")
+//                .title("1. 구원의 확신")
+//                .contents("또 증거는 이것이니 하나님이 우리에게 영생을 주신것과 이 생명이 그의 아들안에 있는 그것이니라 아들이 있는 자 에게는 생명이 있고 하나님의 아들이 없는 자에게는 생명이 없느니라")
+//                .build();
+//
+//        List<VerseDto> versesDto = new ArrayList<>();
+//        versesDto.add(verseDto1);
+//        versesDto.add(verseDto2);
+//        versesDto.add(verseDto3);
+//        versesDto.add(verseDto4);
+//        versesDto.add(verseDto5);
+//        versesDto.add(verseDto6);
 
-        VerseDto verseDto2 = VerseDto.builder()
-                .chapverse("요한복음 15:5")
-                .theme("DEP")
-                .head("2. Quiet Time")
-                .subhead("2-1. 왜 Quiet Time을 가져야하는가?")
-                .title("3. 축복의 약속")
-                .contents("나는 포도나무요 너희는 가지니 저가 내 안에 내가 저 안에 있으면 이 사람은 과실을 많이 맺나니 나를 떠나서는 너희가 아무것도 할 수 없음이라")
-                .build();
-
-        VerseDto verseDto3 = VerseDto.builder()
-                .chapverse("요한복음 16:24")
-                .theme("LOA")
-                .head("그리스도인의 확신")
-                .subhead("")
-                .title("2. 기도응답의 확신")
-                .contents("지금까지는 너희가 내 이름으로 아무것도 구하지 아니하였으나 구하라 그리하면 받으리니 너희 기쁨이 충만하리라")
-                .build();
-
-        VerseDto verseDto4 = VerseDto.builder()
-                .chapverse("로마서 5:8")
-
-                .theme("60구절")
-                .head("B - 그리스도를 전파함")
-                .subhead("")
-                .title("3. 그리스도가 형벌을 받음")
-                .contents("우리가 아직 죄인 되었을 때에 그리스도께서 우리를 위하여 죽으심으로 하나님께서 우리에게 대한 자기의 사랑을 확증하셨느니라")
-                .build();
-
-        VerseDto verseDto5 = VerseDto.builder()
-                .chapverse("베드로전서 2:9")
-                .theme("180")
-                .head("5. 그리스도를 증거함")
-                .subhead("3. 그리스도 안에 있는 신자의 위치")
-                .title("6.제사장이 됨")
-                .contents("오직 너희는 택하신 족속이요 왕 같은 제사장들이요 거룩한 나라요 그의 소유된 백성이니 이는 너희를 어두운 데서 불러내어 그의 기이한 빛에 들어가게 하신 자의 아름다운 덕을 선전하게 하려 하심이라")
-                .build();
-
-        VerseDto verseDto6 = VerseDto.builder()
-                .chapverse("요한일서 5:11~12")
-                .theme("LOA")
-                .head("그리스도인의 확신")
-                .subhead("")
-                .title("1. 구원의 확신")
-                .contents("또 증거는 이것이니 하나님이 우리에게 영생을 주신것과 이 생명이 그의 아들안에 있는 그것이니라 아들이 있는 자 에게는 생명이 있고 하나님의 아들이 없는 자에게는 생명이 없느니라")
-                .build();
-
-        List<VerseDto> versesDto = new ArrayList<>();
-        versesDto.add(verseDto1);
-        versesDto.add(verseDto2);
-        versesDto.add(verseDto3);
-        versesDto.add(verseDto4);
-        versesDto.add(verseDto5);
-        versesDto.add(verseDto6);
-
-        return ResponseEntity.ok(PracticeResponseDto.builder().verses(versesDto).build());
+//        return ResponseEntity.ok(PracticeResponseDto.builder().verses(versesDto).build());
         // 선택한 headListDto 객체를 파라미터로 받아 해당하는 Verse들을 DB에서 꺼내 반환하는 getVersesForPractice 메서드 실행
     }
 
