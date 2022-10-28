@@ -28,13 +28,13 @@ public class CheckingContentsResponseDto {
     private String inputContents;
 
     @NotNull
-    private int hint;
+    private int currentHint;
 
     @NotNull
-    private int minus;
+    private int currentMinus;
 
     @NotNull
-    private int score;
+    private int currentScore;
 }
 /*
     mode: {},

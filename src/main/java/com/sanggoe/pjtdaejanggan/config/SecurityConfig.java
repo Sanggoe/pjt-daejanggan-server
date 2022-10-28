@@ -53,8 +53,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/h2-console/**", "/favicon.ico", "/error");
-        // h2 콘솔 하위의 모든것 요청하고 이거 관련은 무시하는 것으로.
+        return (web) -> web.ignoring().antMatchers(); // "/h2-console/**", "/favicon.ico", "/error");
     }
 
 
@@ -74,12 +73,6 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 401 Unauthorized Error
                 .accessDeniedHandler(jwtAccessDeniedHandler) // 403 Forbidden Error
-
-//                // h2-console을 위한 설정
-//                .and()
-//                .headers()
-//                .frameOptions()
-//                .sameOrigin()
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .and()

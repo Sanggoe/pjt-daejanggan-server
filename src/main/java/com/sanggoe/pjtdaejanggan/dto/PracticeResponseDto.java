@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class PracticeResponseDto {
 
     @NotNull
-    private List<VerseDto> verses = new ArrayList<>();
+    private List<VerseDto> verses;
 
     public static PracticeResponseDto from(List<Verse> verseList) {
         if (verseList == null)

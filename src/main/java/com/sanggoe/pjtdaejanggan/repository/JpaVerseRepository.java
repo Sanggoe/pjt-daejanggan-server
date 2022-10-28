@@ -1,6 +1,9 @@
 package com.sanggoe.pjtdaejanggan.repository;
 
 import com.sanggoe.pjtdaejanggan.entity.Verse;
+import com.sanggoe.pjtdaejanggan.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -11,6 +14,8 @@ import java.util.Optional;
 public class JpaVerseRepository implements VerseRepository {
 
     private final EntityManager em;
+    private static final Logger logger = LoggerFactory.getLogger(JpaVerseRepository.class);
+
 
     public JpaVerseRepository(EntityManager em) {
         this.em = em;
@@ -37,10 +42,20 @@ public class JpaVerseRepository implements VerseRepository {
     }
 
     @Override
-    public Optional<List<Verse>> findByChapverseWithTheme(String chapverse, String theme) {
-        return Optional.ofNullable(em.createQuery("select v from Verse v where v.chapverse = :chapverse and v.theme = :theme", Verse.class)
+    public Optional<List<Verse>> findSomeByHead(List<String> head, int n) {
+        return Optional.ofNullable(em.createNativeQuery("select * from verses where head in (:head) order by RAND() limit :n", Verse.class)
+                .setParameter("head", head)
+                .setParameter("n", n)
+                .getResultList());
+        // n개
+    }
+
+    @Override
+    public Optional<Verse> findByChapverseWithThemeAndSubhead(String chapverse, String theme, String subhead) {
+        return Optional.ofNullable(em.createQuery("select v from Verse v where v.chapverse = :chapverse and v.theme = :theme and v.subhead = :subhead", Verse.class)
                 .setParameter("chapverse", chapverse)
                 .setParameter("theme", theme)
-                .getResultList());
+                .setParameter("subhead", subhead)
+                .getSingleResult());
     }
 }

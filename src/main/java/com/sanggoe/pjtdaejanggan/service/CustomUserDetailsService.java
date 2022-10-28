@@ -1,7 +1,7 @@
 package com.sanggoe.pjtdaejanggan.service;
 
 import com.sanggoe.pjtdaejanggan.entity.User;
-import com.sanggoe.pjtdaejanggan.repository.UserRepository;
+import com.sanggoe.pjtdaejanggan.repository.JpaUserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @Component("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
     // UserDetailsService를 implements 하여 UserRepo를 DI 받는다.
-    private final UserRepository userRepository;
+    private final JpaUserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(JpaUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

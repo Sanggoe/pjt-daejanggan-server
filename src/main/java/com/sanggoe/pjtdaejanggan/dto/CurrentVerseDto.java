@@ -15,7 +15,7 @@ public class CurrentVerseDto {
     private int index;
 
     @NotNull
-    private int verseType;
+    private String verseType;
 
     @NotNull
     private String chapverse;

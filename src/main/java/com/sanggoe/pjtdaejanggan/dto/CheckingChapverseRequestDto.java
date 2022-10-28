@@ -18,6 +18,9 @@ public class CheckingChapverseRequestDto {
     private String chapverse; // DB 찾기용
 
     @NotNull
+    private String subhead; // DB 찾기용
+
+    @NotNull
     private String inputTitle;
 
     @NotNull

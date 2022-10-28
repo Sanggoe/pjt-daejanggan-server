@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class Weight {
 
     @NotNull
-    private int weightType;
+    private String weightType;
 
     @NotNull
     private int in73ChapterNums;

@@ -34,6 +34,12 @@ public class CheckingChapverseResponseDto {
 
     @NotNull
     private boolean correctVerse;
+
+    @NotNull
+    private int currentMinus;
+
+    @NotNull
+    private int currentScore;
 }
 
 /*

@@ -20,10 +20,10 @@ public class CheckingInfoRequestDto {
     private List<String> headList = new ArrayList<>();
 
     @NotNull
-    private int orderType;
+    private String orderType;
 
     @NotNull
-    private int verseType;
+    private String verseType;
 
     @NotNull
     private Count count;
