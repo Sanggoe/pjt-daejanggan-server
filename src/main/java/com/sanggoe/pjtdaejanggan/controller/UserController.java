@@ -77,45 +77,23 @@ public class UserController {
     // 장절 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
     @PostMapping("/chapverse-checking")
     public ResponseEntity<CheckingChapverseResponseDto> getChapverseCheckingResult(@Valid @RequestBody CheckingChapverseRequestDto checkingChapverseRequestDto) {
-        logger.debug(checkingChapverseRequestDto.toString());
-//        return ResponseEntity.ok(userService.getChapverseCheckingResult(checkingChapverseRequestDto));
-
-        return ResponseEntity.ok(CheckingChapverseResponseDto.builder()
-                .resultTitle("사죄의 확신")
-                .correctTitle(false)
-                .resultChapterName("요한일서")
-                .correctChapterName(true)
-                .resultChapter("1")
-                .correctChapter(true)
-                .resultVerse("9")
-                .correctVerse(true)
-                .currentMinus(1)
-                .currentScore(10-1)
-                .build());
-        // 그리고 get 함수는 CheckingChapverseResponseDto 형태의 JSON 데이터를 반환함
+        return ResponseEntity.ok(userService.getChapverseCheckingResult(checkingChapverseRequestDto));
     }
 
     // CheckingContentsRequestDto 객체를 파라미터로 받아서 userService의 getChapterCheckingResult 메서드를 수행한다
     // 내용 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
     @PostMapping("/contents-checking")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')") // PreAuthorize 어노테이션을 통해서, 두 권한을 모두 호출할 수 있는 API이다.
     public ResponseEntity<CheckingContentsResponseDto> getContentCheckingResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
-        logger.debug(checkingContentsRequestDto.toString());
-
-        return ResponseEntity.ok(CheckingContentsResponseDto.builder()
-                .mode("result")
-                .resultTitle("기도응답의 확신")
-                .correctTitle(true)
-                .resultContents("")
-                .inputContents("지금까지는 너희가 내 이름으로 아무것도 구하지 아니하였으나 구하라 그리하면 받으리니 너희 기쁨이 충만하리라")
-                .currentHint(0)
-                .currentMinus(0)
-                .currentScore(10)
-                .build());
-        // ResponseEntity.ok(userService.getContentCheckingResult() Service에서 구현해야 할 듯 .get());
-        // 그리고 get 함수는 CheckingContentsResponseDto 형태의 JSON 데이터를 반환함
+        return ResponseEntity.ok(userService.getContentCheckingResult(checkingContentsRequestDto));
     }
 
+    @PostMapping("/hint-request")
+    public ResponseEntity<CheckingContentsResponseDto> getHintResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
+        if (checkingContentsRequestDto.getCurrentHint() == 9) {
+            return ResponseEntity.ok(userService.getContentCheckingResult(checkingContentsRequestDto));
+        }
+        return ResponseEntity.ok(userService.getHintResult(checkingContentsRequestDto));
+    }
 
     // 좀 마무리 되면... '결과'를 전부 서버로 보내 DB에 저장하는 request mapping 도 필요함.
 
