@@ -253,17 +253,22 @@ public class UserService {
         List<String> inputList = Arrays.stream(input.getInputContents().split(" ")).toList();
         List<String> correctList = Arrays.stream(correct.getContents().split(" ")).toList();
 
-        int i = 0;
         int len = correctList.size();
 
-        while (i < len) {
-            if (input.getHintIndexes().indexOf(i) == -1 && i >= inputList.size() || !correctList.get(i).equals(inputList.get(i))) {
-                break;
+        if (input.getHintIndexes().indexOf(len - 1) == -1) { // 정답의 마지막 구절까지 힌트가 이미 나간 경우가 아니라면
+            int i = 0;
+
+            while (i < len) { // 힌트 인덱스에 이미 나간 힌트의 인덱스가 없고 && (내가 입력한 구절보다 크거나 || 보내온 구절의 지금 인덱스 어절이 정답 어절과 다르면)
+                if (input.getHintIndexes().indexOf(i) == -1 && (i >= inputList.size() || !correctList.get(i).equals(inputList.get(i)))) {
+                    break;
+                }
+                i++;
             }
-            i++;
+            input.getHintIndexes().add(Integer.valueOf(i));
         }
-        input.getHintIndexes().add(Integer.valueOf(i));
+
         List<Integer> hintIndexes = input.getHintIndexes().stream().distinct().collect(Collectors.toList());
+        Collections.sort(hintIndexes);
 
         return CheckingContentsResponseDto.builder() // 임시 더미데이터 반환
                 .mode("check")
