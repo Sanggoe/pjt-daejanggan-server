@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckingContentsRequestDto {
+public class CheckingHintRequestDto {
 
     @NotNull
     private String theme; // DB 찾기용

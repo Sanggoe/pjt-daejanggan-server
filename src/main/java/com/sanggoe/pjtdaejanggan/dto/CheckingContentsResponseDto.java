@@ -1,9 +1,9 @@
 package com.sanggoe.pjtdaejanggan.dto;
 
-
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,16 +16,19 @@ public class CheckingContentsResponseDto {
     private String mode;
 
     @NotNull
-    private String resultTitle;
+    private String correctTitle;
 
     @NotNull
-    private boolean correctTitle;
+    private boolean inputTitleIsCorrect;
 
     @NotNull
-    private String resultContents;
+    private String correctContents;
 
     @NotNull
     private String inputContents;
+
+    @NotNull
+    private List<Integer> hintIndexes;
 
     @NotNull
     private int currentHint;
@@ -36,13 +39,3 @@ public class CheckingContentsResponseDto {
     @NotNull
     private int currentScore;
 }
-/*
-    mode: {},
-    resultTitle: {},
-    isCorrectTitle: {},
-    resultContents: {},
-    inputContents: {},
-    hint: {},
-    minus: {},
-    score: {},
-*/

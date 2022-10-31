@@ -75,19 +75,19 @@ public class UserController {
 
     // CheckingChapverseRequestDto 객체를 파라미터로 받아서 userService의 getChapterCheckingResult 메서드를 수행한다
     // 장절 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
-    @PostMapping("/chapverse-checking")
+    @PostMapping("/checking-chapverse")
     public ResponseEntity<CheckingChapverseResponseDto> getChapverseCheckingResult(@Valid @RequestBody CheckingChapverseRequestDto checkingChapverseRequestDto) {
         return ResponseEntity.ok(userService.getChapverseCheckingResult(checkingChapverseRequestDto));
     }
 
     // CheckingContentsRequestDto 객체를 파라미터로 받아서 userService의 getChapterCheckingResult 메서드를 수행한다
     // 내용 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
-    @PostMapping("/contents-checking")
+    @PostMapping("/checking-contents")
     public ResponseEntity<CheckingContentsResponseDto> getContentCheckingResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
         return ResponseEntity.ok(userService.getContentCheckingResult(checkingContentsRequestDto));
     }
 
-    @PostMapping("/hint-request")
+    @PostMapping("/checking-hint")
     public ResponseEntity<CheckingContentsResponseDto> getHintResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
         if (checkingContentsRequestDto.getCurrentHint() == 9) {
             return ResponseEntity.ok(userService.getContentCheckingResult(checkingContentsRequestDto));

@@ -10,19 +10,19 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckingContentsRequestDto {
+public class CheckingHintResponseDto {
 
     @NotNull
-    private String theme; // DB 찾기용
+    private String mode;
 
     @NotNull
-    private String chapverse; // DB 찾기용
+    private String correctTitle;
 
     @NotNull
-    private String subhead; // DB 찾기용
+    private boolean inputTitleIsCorrect;
 
     @NotNull
-    private String inputTitle;
+    private String correctContents;
 
     @NotNull
     private String inputContents;

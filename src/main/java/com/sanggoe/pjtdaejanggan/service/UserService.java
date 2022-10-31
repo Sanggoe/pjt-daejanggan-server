@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -176,41 +175,6 @@ public class UserService {
         return CheckingInfoResponseDto.from(verses, chapverseNum);
     }
 
-
-    // 내용 점검의 힌트 요청에 대한 메서드
-    @Transactional(readOnly = true)
-    public CheckingContentsResponseDto getHintResult(CheckingContentsRequestDto checkingContentsRequestDto) {
-        Verse verse = verseRepository.findByChapverseWithThemeAndSubhead(checkingContentsRequestDto.getChapverse(), checkingContentsRequestDto.getTheme(), checkingContentsRequestDto.getSubhead()).orElse(null);
-        return getContentsHint(checkingContentsRequestDto, verse);
-    }
-
-    private CheckingContentsResponseDto getContentsHint(CheckingContentsRequestDto input, Verse correct) {
-
-        return CheckingContentsResponseDto.builder() // 임시 더미데이터 반환
-                .mode("result")
-                .resultTitle(correct.getTitle())
-                .correctTitle(false) // boolean
-                .resultContents(correct.getContents())
-                .inputContents(compareHint(input.getInputContents(), correct.getContents())) // 데이터 객체로 차라리 반환하는걸 코드 바꿔보자. 스트링보다 객체가 더 나을듯?
-                .currentHint(input.getCurrentHint() + 1)
-                .currentMinus(input.getCurrentMinus() + 1)
-                .currentScore(input.getCurrentScore() - input.getCurrentMinus() - 1)
-                .build();
-    }
-
-    private String compareHint(String input, String  correct) {
-        List<String> inputList = Arrays.stream(input.split(" ")).toList();
-        List<String> correctList = Arrays.stream(correct.split(" ")).toList();
-
-        int i=0;
-        for (String s: correctList) {
-            if (!s.equals(inputList.get(i++))) {
-                break;
-            }
-        }
-        return correctList.get(i-1);
-    }
-
     // 장절 점검 요청에 대한 메서드
     @Transactional(readOnly = true)
     public CheckingChapverseResponseDto getChapverseCheckingResult(CheckingChapverseRequestDto checkingChapverseRequestDto) {
@@ -225,6 +189,44 @@ public class UserService {
         return compareContentsAnswer(checkingContentsRequestDto, verse);
     }
 
+    // 내용 점검의 힌트 요청에 대한 메서드
+    @Transactional(readOnly = true)
+    public CheckingContentsResponseDto getHintResult(CheckingContentsRequestDto checkingContentsRequestDto) {
+        Verse verse = verseRepository.findByChapverseWithThemeAndSubhead(checkingContentsRequestDto.getChapverse(), checkingContentsRequestDto.getTheme(), checkingContentsRequestDto.getSubhead()).orElse(null);
+        return compareContentsHint(checkingContentsRequestDto, verse);
+    }
+
+    // 장절 점검 정답을 비교하는 메서드
+    private CheckingChapverseResponseDto compareChapverseAnswer(CheckingChapverseRequestDto input, Verse correct) {
+        ParsedChapverseDto correctChapverse = parsingChapverse(correct.getChapverse());
+
+        boolean[] corrects = new boolean[4];
+        corrects[0] = compareTitle(input.getInputTitle(), correct.getTitle());
+        corrects[1] = compareChapterName(input.getInputChapterName(), correctChapverse.getCorrectChapterName());
+        corrects[2] = compareChapter(input.getInputChapter(), correctChapverse.getCorrectChapter());
+        corrects[3] = compareVerse(input.getInputVerse(), correctChapverse.getCorrectVerse());
+
+        int minus = 0;
+        for (boolean c : corrects) {
+            if (!c) {
+                minus++;
+            }
+        }
+
+        return CheckingChapverseResponseDto.builder()
+                .correctTitle(correct.getTitle())
+                .inputTitleIsCorrect(corrects[0])
+                .correctChapterName(correctChapverse.getCorrectChapterName())
+                .inputChapterNameIsCorrect(corrects[1])
+                .correctChapter(correctChapverse.getCorrectChapter())
+                .inputChapterIsCorrect(corrects[2])
+                .correctVerse(correctChapverse.getCorrectVerse())
+                .inputVerseIsCorrect(corrects[3])
+                .currentMinus(minus)
+                .currentScore(10 - minus)
+                .build();
+    }
+
     // 내용 점검 정답을 비교하는 메서드
     private CheckingContentsResponseDto compareContentsAnswer(CheckingContentsRequestDto input, Verse correct) {
         boolean correctTitle = compareTitle(input.getInputTitle(), correct.getTitle());
@@ -235,13 +237,76 @@ public class UserService {
         String correctContents = compareContents(input.getInputContents(), correct.getContents());
         return CheckingContentsResponseDto.builder() // 임시 더미데이터 반환
                 .mode("result")
-                .resultTitle(correct.getTitle())
-                .correctTitle(correctTitle) // boolean
-                .resultContents(correct.getContents())
+                .correctTitle(correct.getTitle())
+                .inputTitleIsCorrect(correctTitle) // boolean
+                .correctContents(correct.getContents())
                 .inputContents(input.getInputContents())
+                .hintIndexes(input.getHintIndexes())
+                .currentHint(input.getCurrentHint())
+                .currentMinus(input.getCurrentMinus())
+                .currentScore(10 - input.getCurrentMinus())
+                .build();
+    }
+
+    // 내용 점검 힌트를 수행하는 메서드
+    private CheckingContentsResponseDto compareContentsHint(CheckingContentsRequestDto input, Verse correct) {
+        List<String> inputList = Arrays.stream(input.getInputContents().split(" ")).toList();
+        List<String> correctList = Arrays.stream(correct.getContents().split(" ")).toList();
+
+        int i = 0;
+        int len = correctList.size();
+
+        while (i < len) {
+            if (input.getHintIndexes().indexOf(i) == -1 && i >= inputList.size() || !correctList.get(i).equals(inputList.get(i))) {
+                break;
+            }
+            i++;
+        }
+        input.getHintIndexes().add(Integer.valueOf(i));
+        List<Integer> hintIndexes = input.getHintIndexes().stream().distinct().collect(Collectors.toList());
+
+        return CheckingContentsResponseDto.builder() // 임시 더미데이터 반환
+                .mode("check")
+                .correctTitle(correct.getTitle())
+                .inputTitleIsCorrect(false) // boolean
+                .correctContents(correct.getContents())
+                .inputContents(input.getInputContents()) // 데이터 객체로 차라리 반환하는걸 코드 바꿔보자. 스트링보다 객체가 더 나을듯?
+                .hintIndexes(hintIndexes)
                 .currentHint(input.getCurrentHint() + 1)
                 .currentMinus(input.getCurrentMinus() + 1)
-                .currentScore(input.getCurrentScore() - input.getCurrentMinus() - 1)
+                .currentScore(10 - input.getCurrentMinus())
+                .build();
+    }
+
+
+    // 정규식으로 parsing 하여 제목을 비교한 결과를 반환하는 메서드
+    private boolean compareTitle(String input, String correct) {
+        return input.replaceAll("[0-9. ]", "").equals(correct.replaceAll("[0-9. ]", ""));
+    }
+
+    // 정규식으로 parsing 하여 성경이름을 비교한 결과를 반환하는 메서드
+    private boolean compareChapterName(String input, String correct) {
+        return input.replace(" ", "").equals(correct);
+    }
+
+    // 정규식으로 parsing 하여 장을 비교한 결과를 반환하는 메서드
+    private boolean compareChapter(String input, String correct) {
+        return input.replaceAll("[장편]", "").equals(correct);
+    }
+
+    // 정규식으로 parsing 하여 절을 비교한 결과를 반환하는 메서드
+    private boolean compareVerse(String input, String correct) {
+        return input.replaceAll("[-~, 반절]", "").equals(correct.replaceAll("[~, ]", ""));
+    }
+
+    // 성경장절 정보를 성경이름, 장, 절로 token 분리한 결과 정보인 ParsedChapverseDto 객체를 반환하는 메서드
+    private ParsedChapverseDto parsingChapverse(String str) {
+        String[] correct = str.split("[ :]");
+
+        return ParsedChapverseDto.builder()
+                .correctChapterName(correct[0])
+                .correctChapter(correct[1])
+                .correctVerse(correct[2])
                 .build();
     }
 
@@ -252,67 +317,4 @@ public class UserService {
         /***************************************************/
         return null; //Arrays.stream(split).collect(Collectors.toList()).subList(0, 3).toString();
     }
-
-    // 장절 점검 정답을 비교하는 메서드
-    private CheckingChapverseResponseDto compareChapverseAnswer(CheckingChapverseRequestDto input, Verse result) {
-        ParsedChapverseDto resultChapverse = parsingChapverse(result.getChapverse());
-
-        boolean[] corrects = new boolean[4];
-        corrects[0] = compareTitle(input.getInputTitle(), result.getTitle());
-        corrects[1] = compareChapterName(input.getInputChapterName(), resultChapverse.getResultChapterName());
-        corrects[2] = compareChapter(input.getInputChapter(), resultChapverse.getResultChapter());
-        corrects[3] = compareVerse(input.getInputVerse(), resultChapverse.getResultVerse());
-
-        int minus = 0;
-        for (boolean c : corrects) {
-            if (!c) {
-                minus++;
-            }
-        }
-
-        return CheckingChapverseResponseDto.builder()
-                .resultTitle(result.getTitle())
-                .correctTitle(corrects[0])
-                .resultChapterName(resultChapverse.getResultChapterName())
-                .correctChapterName(corrects[1])
-                .resultChapter(resultChapverse.getResultChapter())
-                .correctChapter(corrects[2])
-                .resultVerse(resultChapverse.getResultVerse())
-                .correctVerse(corrects[3])
-                .currentMinus(minus)
-                .currentScore(10 - minus)
-                .build();
-    }
-
-    // 정규식으로 parsing 하여 제목을 비교한 결과를 반환하는 메서드
-    private boolean compareTitle(String input, String result) {
-        return input.replaceAll("[0-9. ]", "").equals(result.replaceAll("[0-9. ]", ""));
-    }
-
-    // 정규식으로 parsing 하여 성경이름을 비교한 결과를 반환하는 메서드
-    private boolean compareChapterName(String input, String result) {
-        return input.replace(" ", "").equals(result);
-    }
-
-    // 정규식으로 parsing 하여 장을 비교한 결과를 반환하는 메서드
-    private boolean compareChapter(String input, String result) {
-        return input.replaceAll("[장편]", "").equals(result);
-    }
-
-    // 정규식으로 parsing 하여 절을 비교한 결과를 반환하는 메서드
-    private boolean compareVerse(String input, String result) {
-        return input.replaceAll("[-~, 반절]", "").equals(result.replaceAll("[~, ]", ""));
-    }
-
-    // 성경장절 정보를 성경이름, 장, 절로 token 분리한 결과 정보인 ParsedChapverseDto 객체를 반환하는 메서드
-    private ParsedChapverseDto parsingChapverse(String str) {
-        String[] result = str.split("[ :]");
-
-        return ParsedChapverseDto.builder()
-                .resultChapterName(result[0])
-                .resultChapter(result[1])
-                .resultVerse(result[2])
-                .build();
-    }
-
 }

@@ -12,28 +12,28 @@ import javax.validation.constraints.NotNull;
 public class CheckingChapverseResponseDto {
 
     @NotNull
-    private String resultTitle;
+    private String correctTitle;
 
     @NotNull
-    private boolean correctTitle;
+    private boolean inputTitleIsCorrect;
 
     @NotNull
-    private String resultChapterName;
+    private String correctChapterName;
 
     @NotNull
-    private boolean correctChapterName;
+    private boolean inputChapterNameIsCorrect;
 
     @NotNull
-    private String resultChapter;
+    private String correctChapter;
 
     @NotNull
-    private boolean correctChapter;
+    private boolean inputChapterIsCorrect;
 
     @NotNull
-    private String resultVerse;
+    private String correctVerse;
 
     @NotNull
-    private boolean correctVerse;
+    private boolean inputVerseIsCorrect;
 
     @NotNull
     private int currentMinus;

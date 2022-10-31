@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ParsedChapverseDto {
 
-    private String resultChapterName;
-    private String resultChapter;
-    private String resultVerse;
+    private String correctChapterName;
+    private String correctChapter;
+    private String correctVerse;
 }
