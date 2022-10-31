@@ -3,6 +3,7 @@ package com.sanggoe.pjtdaejanggan.controller;
 import com.sanggoe.pjtdaejanggan.dto.CheckingContentsRequestDto;
 import com.sanggoe.pjtdaejanggan.dto.CheckingChapverseRequestDto;
 import com.sanggoe.pjtdaejanggan.dto.*;
+import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
 import com.sanggoe.pjtdaejanggan.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 // @CrossOrigin
 @RestController
@@ -95,7 +94,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getHintResult(checkingContentsRequestDto));
     }
 
-    // 좀 마무리 되면... '결과'를 전부 서버로 보내 DB에 저장하는 request mapping 도 필요함.
+    @PostMapping("/save-check-result")
+    public ResponseEntity<CheckRecord> saveCheckingResult(@Valid @RequestBody SaveCheckingResultDto saveCheckingResultDto) {
+        return ResponseEntity.ok(userService.saveCheckingResult(saveCheckingResultDto));
+    }
 
 //    @GetMapping("/user/{username}")
 //    @PreAuthorize("hasAnyRole('ADMIN')") // PreAuthorize 어노테이션을 통해서, ADMIN 권한만 호출할 수 있는 API이다.

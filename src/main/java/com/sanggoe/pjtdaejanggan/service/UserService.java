@@ -2,11 +2,13 @@ package com.sanggoe.pjtdaejanggan.service;
 
 import com.sanggoe.pjtdaejanggan.dto.*;
 import com.sanggoe.pjtdaejanggan.entity.Authority;
+import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
 import com.sanggoe.pjtdaejanggan.entity.User;
 import com.sanggoe.pjtdaejanggan.entity.Verse;
 import com.sanggoe.pjtdaejanggan.exception.DuplicateMemberException;
 import com.sanggoe.pjtdaejanggan.exception.NotFoundMemberException;
 import com.sanggoe.pjtdaejanggan.exception.NotFountVerseException;
+import com.sanggoe.pjtdaejanggan.repository.JpaResultRepository;
 import com.sanggoe.pjtdaejanggan.repository.JpaUserRepository;
 import com.sanggoe.pjtdaejanggan.repository.JpaVerseRepository;
 import com.sanggoe.pjtdaejanggan.util.SecurityUtil;
@@ -27,13 +29,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private final JpaUserRepository userRepository;
     private final JpaVerseRepository verseRepository;
+    private final JpaResultRepository resultRepository;
     private final PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     // userRepository와 passwordEncoder를 주입받는다.
-    public UserService(JpaUserRepository userRepository, JpaVerseRepository verseRepository, PasswordEncoder passwordEncoder) {
+    public UserService(JpaUserRepository userRepository, JpaVerseRepository verseRepository, JpaResultRepository resultRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.verseRepository = verseRepository;
+        this.resultRepository = resultRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -175,6 +179,31 @@ public class UserService {
         return CheckingInfoResponseDto.from(verses, chapverseNum);
     }
 
+    // 점검 결과 저장을 위한 메서드
+    @Transactional
+    public CheckRecord saveCheckingResult(SaveCheckingResultDto result) {
+        CheckRecord checkRecord = CheckRecord.builder()
+                .username(result.getUsername())
+                .check_time(result.getCheck_time())
+                .count_total(result.getCount_total())
+                .count_selected(result.getCount_selected())
+                .score_total(result.getScore_total())
+                .score_transform(result.getScore_transform())
+                .check_chapverses(result.getCheck_chapverses())
+                .build();
+
+        logger.debug(">>>>>>>>> save result >>>>>>>>>");
+        logger.debug(result.getUsername());
+        logger.debug(result.getCheck_time());
+        logger.debug(String.valueOf(result.getCount_total()));
+        logger.debug(String.valueOf(result.getCount_selected()));
+        logger.debug(String.valueOf(result.getScore_total()));
+        logger.debug(String.valueOf(result.getScore_transform()));
+        logger.debug(String.valueOf(result.getCheck_chapverses()));
+        logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        return resultRepository.save(checkRecord);
+    }
+    
     // 장절 점검 요청에 대한 메서드
     @Transactional(readOnly = true)
     public CheckingChapverseResponseDto getChapverseCheckingResult(CheckingChapverseRequestDto checkingChapverseRequestDto) {
