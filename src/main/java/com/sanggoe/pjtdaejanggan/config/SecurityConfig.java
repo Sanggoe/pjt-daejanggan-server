@@ -56,7 +56,6 @@ public class SecurityConfig {
         return (web) -> web.ignoring().antMatchers(); // "/h2-console/**", "/favicon.ico", "/error");
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -82,9 +81,9 @@ public class SecurityConfig {
                 // 토큰을 받기 위한 로그인 API, 회원가입 API는 토큰이 없는 상태에서 들어오기 때문에 모두 접근 가능으로 바꿔준다.
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/signup").permitAll()
-                .antMatchers("/api/hello").permitAll()
+                .antMatchers("/api/user/authenticate").permitAll()
+                .antMatchers("/api/user/signup").permitAll()
+                .antMatchers("/api/user/hello").permitAll()
                 .anyRequest().authenticated() // 그 외 요청은 모두 인증이 되어야 가능
 
                 // jwt 필터를 addFilterBefore로 등록했던 Jwt Security config 클래스에 토큰 제공자를 주입시켜 적용!!

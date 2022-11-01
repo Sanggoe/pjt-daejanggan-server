@@ -1,0 +1,28 @@
+package com.sanggoe.pjtdaejanggan.controller;
+
+import com.sanggoe.pjtdaejanggan.dto.SaveCheckingResultDto;
+import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
+import com.sanggoe.pjtdaejanggan.service.ResultService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("/api/result")
+public class ResultController {
+    private final ResultService resultService;
+
+    public ResultController(ResultService resultService) {
+        this.resultService = resultService;
+    }
+
+    @PostMapping("/save-check-result")
+    public ResponseEntity<CheckRecord> saveCheckingResult(@Valid @RequestBody SaveCheckingResultDto saveCheckingResultDto) {
+        return ResponseEntity.ok(resultService.saveCheckingResult(saveCheckingResultDto));
+    }
+
+}
