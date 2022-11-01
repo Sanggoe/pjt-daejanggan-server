@@ -36,6 +36,6 @@ public class CheckRecord {
     @Column(name = "score_transform", length = 10)
     private float score_transform;
 
-    @Column(name = "check_chapverses")
-    private String check_chapverses; // |로 구분
+    @Column(name = "check_chapverses", columnDefinition = "TEXT")
+    private String check_chapverses; // &로 구분
 }

@@ -4,9 +4,7 @@ import com.sanggoe.pjtdaejanggan.entity.Verse;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter

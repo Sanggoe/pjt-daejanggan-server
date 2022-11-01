@@ -2,17 +2,16 @@ package com.sanggoe.pjtdaejanggan.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
+
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveCheckingResultDto {
-
-    @NotNull
-    private String username;
+public class CheckRecordDto {
 
     @NotNull
     private String check_time;
@@ -30,6 +29,6 @@ public class SaveCheckingResultDto {
     private float score_transform;
 
     @NotNull
-    private String check_chapverses; // |로 구분
+    private String check_chapverses; // &로 구분
 
 }
