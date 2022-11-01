@@ -1,5 +1,7 @@
 package com.sanggoe.pjtdaejanggan.service;
 
+import com.sanggoe.pjtdaejanggan.dto.MyRecordsRequestDto;
+import com.sanggoe.pjtdaejanggan.dto.MyRecordsResponseDto;
 import com.sanggoe.pjtdaejanggan.dto.SaveCheckingResultDto;
 import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
 import com.sanggoe.pjtdaejanggan.repository.JpaResultRepository;
@@ -7,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ResultService {
@@ -40,5 +44,11 @@ public class ResultService {
         logger.debug(String.valueOf(result.getCheck_chapverses()));
         logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         return resultRepository.save(checkRecord);
+    }
+
+    @Transactional
+    public MyRecordsResponseDto getMyRecords(MyRecordsRequestDto myRecordsRequestDto) {
+        List<CheckRecord> checkRecords = resultRepository.findByUsername(myRecordsRequestDto.getUsername()).orElse(null);
+        return MyRecordsResponseDto.from(checkRecords);
     }
 }

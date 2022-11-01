@@ -1,5 +1,7 @@
 package com.sanggoe.pjtdaejanggan.controller;
 
+import com.sanggoe.pjtdaejanggan.dto.MyRecordsRequestDto;
+import com.sanggoe.pjtdaejanggan.dto.MyRecordsResponseDto;
 import com.sanggoe.pjtdaejanggan.dto.SaveCheckingResultDto;
 import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
 import com.sanggoe.pjtdaejanggan.service.ResultService;
@@ -25,4 +27,8 @@ public class ResultController {
         return ResponseEntity.ok(resultService.saveCheckingResult(saveCheckingResultDto));
     }
 
+    @PostMapping("/my-records")
+    public ResponseEntity<MyRecordsResponseDto> getMyRecords(@Valid @RequestBody MyRecordsRequestDto myRecordsRequestDto) {
+        return ResponseEntity.ok(resultService.getMyRecords(myRecordsRequestDto));
+    }
 }
