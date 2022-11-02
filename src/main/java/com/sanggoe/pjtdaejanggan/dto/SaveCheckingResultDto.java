@@ -2,6 +2,7 @@ package com.sanggoe.pjtdaejanggan.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -30,6 +31,12 @@ public class SaveCheckingResultDto {
     private float score_transform;
 
     @NotNull
-    private String check_chapverses; // |로 구분
+    private String check_chapverses; // &로 구분
+
+    @NotNull
+    private String check_type;
+
+    @NotNull
+    private String verse_type;
 
 }

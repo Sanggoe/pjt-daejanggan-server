@@ -32,17 +32,10 @@ public class ResultService {
                 .score_total(result.getScore_total())
                 .score_transform(result.getScore_transform())
                 .check_chapverses(result.getCheck_chapverses())
+                .check_type(result.getCheck_type())
+                .verse_type(result.getVerse_type())
                 .build();
 
-        logger.debug(">>>>>>>>> save result >>>>>>>>>");
-        logger.debug(result.getUsername());
-        logger.debug(result.getCheck_time());
-        logger.debug(String.valueOf(result.getCount_total()));
-        logger.debug(String.valueOf(result.getCount_selected()));
-        logger.debug(String.valueOf(result.getScore_total()));
-        logger.debug(String.valueOf(result.getScore_transform()));
-        logger.debug(String.valueOf(result.getCheck_chapverses()));
-        logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         return resultRepository.save(checkRecord);
     }
 

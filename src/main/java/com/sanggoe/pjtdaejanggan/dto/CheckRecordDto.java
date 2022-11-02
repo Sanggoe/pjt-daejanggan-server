@@ -31,4 +31,9 @@ public class CheckRecordDto {
     @NotNull
     private String check_chapverses; // &로 구분
 
+    @NotNull
+    private String check_type;
+
+    @NotNull
+    private String verse_type;
 }

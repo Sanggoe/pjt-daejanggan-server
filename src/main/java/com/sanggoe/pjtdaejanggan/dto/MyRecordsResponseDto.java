@@ -26,6 +26,8 @@ public class MyRecordsResponseDto {
                         .score_total(checkRecord.getScore_total())
                         .score_transform(checkRecord.getScore_transform())
                         .check_chapverses(checkRecord.getCheck_chapverses())
+                        .check_type(checkRecord.getCheck_type())
+                        .verse_type(checkRecord.getVerse_type())
                         .build())
                 .collect(Collectors.toList());
 
