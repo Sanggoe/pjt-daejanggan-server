@@ -43,8 +43,7 @@ public class VerseController {
     // CheckingContentsRequestDto 객체를 파라미터로 받아서 verseService의 getChapterCheckingResult 메서드를 수행한다
     // 내용 입력 정보를 request로 받아 정답 채점 결과를 response로 보내는 것
     @PostMapping("/checking-contents")
-    public ResponseEntity<CheckingContentsResponseDto
-            > getContentCheckingResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
+    public ResponseEntity<CheckingContentsResponseDto> getContentCheckingResult(@Valid @RequestBody CheckingContentsRequestDto checkingContentsRequestDto) {
         return ResponseEntity.ok(verseService.getContentCheckingResult(checkingContentsRequestDto));
     }
 

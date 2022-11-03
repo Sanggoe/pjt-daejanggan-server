@@ -4,7 +4,7 @@ import com.sanggoe.pjtdaejanggan.entity.Verse;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Getter
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 public class PracticeResponseDto {
 
     @NotNull
-    private List<VerseDto> verses;
+    private ArrayList<VerseDto> verses;
 
-    public static PracticeResponseDto from(List<Verse> verseList) {
+    public static PracticeResponseDto from(ArrayList<Verse> verseList) {
         if (verseList == null)
             return null;
 
-        List<VerseDto> versesDto = verseList.stream()
+        ArrayList<VerseDto> versesDto = (ArrayList<VerseDto>) verseList.stream()
                 .map(verse -> VerseDto.builder()
                         .chapverse(verse.getChapverse())
                         .theme(verse.getTheme())

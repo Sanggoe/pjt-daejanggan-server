@@ -3,7 +3,7 @@ package com.sanggoe.pjtdaejanggan.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -28,7 +28,10 @@ public class CheckingContentsRequestDto {
     private String inputContents;
 
     @NotNull
-    private List<Integer> hintIndexes;
+    private ArrayList<Integer> hintIndexes;
+
+    @NotNull
+    private ArrayList<Integer> verifiedIndexes;
 
     @NotNull
     private int currentHint;

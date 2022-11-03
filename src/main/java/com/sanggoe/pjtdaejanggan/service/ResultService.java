@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class ResultService {
 
     @Transactional
     public MyRecordsResponseDto getMyRecords(MyRecordsRequestDto myRecordsRequestDto) {
-        List<CheckRecord> checkRecords = resultRepository.findByUsername(myRecordsRequestDto.getUsername()).orElse(null);
+        ArrayList<CheckRecord> checkRecords = (ArrayList<CheckRecord>) resultRepository.findByUsername(myRecordsRequestDto.getUsername()).orElse(null);
         return MyRecordsResponseDto.from(checkRecords);
     }
 }

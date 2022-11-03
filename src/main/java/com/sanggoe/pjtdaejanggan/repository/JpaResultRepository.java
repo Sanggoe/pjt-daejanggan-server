@@ -1,7 +1,6 @@
 package com.sanggoe.pjtdaejanggan.repository;
 
 import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
-import com.sanggoe.pjtdaejanggan.entity.Verse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
