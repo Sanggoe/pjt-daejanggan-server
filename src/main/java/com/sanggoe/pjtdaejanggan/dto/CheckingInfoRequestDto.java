@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class CheckingInfoRequestDto {
     private String checkingType;
 
     @NotNull
-    private ArrayList<String> headList = new ArrayList<>();
+    private List<String> headList = new ArrayList<>();
 
     @NotNull
     private String orderType;

@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -15,14 +16,14 @@ import java.util.stream.Collectors;
 public class CheckingInfoResponseDto {
 
     @NotNull
-    private ArrayList<CurrentVerseDto> verses = new ArrayList<>();
+    private List<CurrentVerseDto> verses = new ArrayList<>();
 
-    public static CheckingInfoResponseDto from(ArrayList<Verse> verseList, int chapverseNum) {
+    public static CheckingInfoResponseDto from(List<Verse> verseList, int chapverseNum) {
         if (verseList == null)
             return null;
 
         int[] index = {0};
-        ArrayList<CurrentVerseDto> versesDto = (ArrayList<CurrentVerseDto>) verseList.stream()
+        List<CurrentVerseDto> versesDto = (List<CurrentVerseDto>) verseList.stream()
                 .map(verse -> CurrentVerseDto.builder()
                         .index(index[0])
                         .verseType(index[0]++ < chapverseNum ? "장절" : "내용")

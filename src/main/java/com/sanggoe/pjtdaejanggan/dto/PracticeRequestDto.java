@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,6 +14,6 @@ import java.util.ArrayList;
 public class PracticeRequestDto {
 
     @NotNull
-    private ArrayList<String> headList = new ArrayList<>();
+    private List<String> headList = new ArrayList<>();
 
 }

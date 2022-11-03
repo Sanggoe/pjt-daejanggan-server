@@ -4,7 +4,7 @@ import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class MyRecordsResponseDto {
 
     @NotNull
-    private ArrayList<CheckRecordDto> myRecords;
+    private List<CheckRecordDto> myRecords;
 
-    public static MyRecordsResponseDto from(ArrayList<CheckRecord> checkRecords) {
-        ArrayList<CheckRecordDto> checkRecordDtos = (ArrayList<CheckRecordDto>) checkRecords.stream()
+    public static MyRecordsResponseDto from(List<CheckRecord> checkRecords) {
+        List<CheckRecordDto> checkRecordDtos = checkRecords.stream()
                 .map(checkRecord -> CheckRecordDto.builder()
                         .check_time(checkRecord.getCheck_time())
                         .count_total(checkRecord.getCount_total())
