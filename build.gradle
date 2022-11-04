@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.sanggoe'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0-release'
 sourceCompatibility = '17'
 
 configurations {
@@ -36,10 +36,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
 
 	// mybatis, db 의존성 추가
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.30'
-
 }
 
 tasks.named('test') {

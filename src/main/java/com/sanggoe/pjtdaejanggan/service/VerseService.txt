@@ -164,7 +164,6 @@ public class VerseService {
 
         for (int i : hintIndexes) verifiedIndexes.remove(Integer.valueOf(i));
         correctContent = getHintedAndVerifiedCorrectContent(correctContent, hintIndexes, verifiedIndexes);
-        logger.debug("correctContent : " + correctContent);
 
         // 제목 점검 및 결과
         boolean inputTitleIsCorrect = compareTitle(inputTitle, correctTitle);
@@ -186,8 +185,7 @@ public class VerseService {
             if (!inputTitleIsCorrect) lostPoint += 1;
             resultPoint = TOTAL_SCORE - lostPoint;
 
-            logger.debug(markedCorrectContent);
-
+            logger.debug(">>>>>>>>>> Perfect Check Return 합니다~ >>>>>>>>>>");
             return CheckingContentsResponseDto.builder() // whole Check 완료 후, 기존 힌트 감점 및 제목 채점결과를 반영하여 결과창으로 return
                     .mode("result")
                     .correctTitle(correctTitle)
@@ -212,20 +210,6 @@ public class VerseService {
             int pi = 0; // pointer for arrInput
             int pc = 0; // pointer for arrCorrect
 
-            // v indexes 변경 전에 사전 저장해둠
-            // check mode 리턴 markedCorrectContent에 반영 필요
-            ArrayList<Integer> arrVerifiedIndexes = new ArrayList<>();
-
-            // request시 마지막 hint index 저장해둠
-            int lastHintIndex = -1;
-            for (int i = 0; i < arrCorrect.size(); i++) {
-                if (arrCorrect.get(i).getMarking() == 'v') {
-                    arrVerifiedIndexes.add(i);
-                } else if (arrCorrect.get(i).getMarking() == 'h') {
-                    lastHintIndex = i;
-                }
-            }
-
             // 부분채점용 변수
             boolean flagFor2Words = false;  // 두어절 틀리면 true로 변경
             int idxFor2Words = -1;          // 두어절 hint가 제공될 arrCorrect의 index값을 저장 = 양수면 두어절hint가 발생한 것
@@ -239,8 +223,7 @@ public class VerseService {
                     logger.debug("어절비교, [" + arrInput.get(pi).getWord() + "]와 [" + arrCorrect.get(pc).getWord() + "]는 일치");
                     arrInput.get(pi).setMarking('r');
                     arrCorrect.get(pc).setMarking('r');
-                    /***** 어절 임시 검증 정보 추가?? *****/
-//                    if (!hintIndexes.contains(pi) && arrVerifiedIndexes.contains(pi)) arrVerifiedIndexes.add(pi);
+//                    if (!hintIndexes.contains(pi)) verifiedIndexes.add(pi);
                     pi++;
                     pc++;
                 } else { // 어절 비교 틀리면 띄어쓰기 보정 작업
@@ -472,39 +455,35 @@ public class VerseService {
                     lostPoint++;
                     hintCnt++;
 
-                    // 마지막 힌트 어절 인덱스 임시 저장
-                    if (idxFor2Words > lastHintIndex) {
-                        lastHintIndex = idxFor2Words;
-                    }
-
-                    // 마지막 힌트 어절 인덱스 추가 및 정렬
-                    if (!hintIndexes.contains(lastHintIndex)) {
-                        hintIndexes.add(lastHintIndex);
+                    // 힌트 인덱스 추가 및 정렬
+                    if (idxFor2Words > (hintIndexes.size() == 0 ? -1 : hintIndexes.get(hintIndexes.size() - 1))) {
+                        if (!hintIndexes.contains(idxFor2Words)) hintIndexes.add(idxFor2Words);
                         Collections.sort(hintIndexes);
                     }
+                    int lastHintIndex = (hintIndexes.size() == 0 ? -1 : hintIndexes.get(hintIndexes.size() - 1)); // 마지막 힌트 인덱스
 
-                    // 마지막 힌트 어절 인덱스 이후로 words 싹다 지우기
+                    // 마지막 힌트 인덱스 이후로 words 싹다 지우기
                     while (lastHintIndex + 1 < arrCorrect.size()) {
                         arrCorrect.remove(lastHintIndex + 1);
                     }
 
                     /***** 인덱스들에 대해 hint mark 추가 *****/
-                    // 힌트 어절 인덱스 기준으로 h 표시
+                    // hintIndexes 기준으로 h 표시
                     for (int i : hintIndexes) {
                         if (i < arrCorrect.size()) {
                             arrCorrect.get(i).setMarking('h');
                         }
                     }
 
-                    // 임시 검증 어절 인덱스 기준으로 v 표시
-                    for (int i : arrVerifiedIndexes) {
-                        if (i < arrCorrect.size()) {
-                            arrCorrect.get(i).setMarking((arrCorrect.get(i).getMarking() == 'h') ? 'h' : 'v');
-                        }
-                    }
+//                    // verifiedIndexes 기준으로 v 표시
+//                    for (int i : verifiedIndexes) {
+//                        if (i < arrCorrect.size()) {
+//                            arrCorrect.get(i).setMarking((arrCorrect.get(i).getMarking() == 'h') ? 'h' : 'v');
+//                        }
+//                    }
 
                     for (Word w : arrCorrect) {
-                        if (w.getMarking() != 'h' && w.getMarking() != 'v') { /***** || 가 아니라, &&로 수정 *****/
+                        if (w.getMarking() != 'h' && w.getMarking() != 'v') { /***** || 가 아니라, && 추가 *****/
                             w.setMarking('c');  // covered = [     ]  처리할 어절
                         }
                     }
@@ -515,6 +494,7 @@ public class VerseService {
                         hintedVerifiedCorrectContent += w.toMarkedString();
                     }
 
+                    resultPoint = TOTAL_SCORE - lostPoint;
                     logger.debug(hintedVerifiedCorrectContent);
 
                     return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 남았을 때 채점결과를 반영하여 check 창으로 return
@@ -522,12 +502,12 @@ public class VerseService {
                             .correctTitle(correctTitle) // 사실 안쓰이는 정보
                             .inputTitleIsCorrect(inputTitleIsCorrect) // 사실 안쓰이는 정보
                             .correctContents(hintedVerifiedCorrectContent) // 힌트창으로 색칠 or [   ] 처리해서 노출
-                            .inputContents(inputContent) // 그리고 이걸 토대로 input창에도 저장
+                            .inputContents(hintedVerifiedCorrectContent) // 그리고 이걸 토대로 input창에도 저장
                             .hintIndexes(hintIndexes)
                             .verifiedIndexes(verifiedIndexes)
                             .currentHint(hintCnt)
                             .currentMinus(lostPoint)
-                            .currentScore(TOTAL_SCORE) // 사실 안쓰이는 정보
+                            .currentScore(resultPoint) // 사실 안쓰이는 정보
                             .build();
 
                 } else { // lostPoint가 9점이상이므로 result mode
@@ -535,26 +515,23 @@ public class VerseService {
                     if (lostPoint >= 9) lostPoint = 10;
                     hintCnt++;
 
-                    // 마지막 힌트 어절 인덱스 임시 저장
-                    if (idxFor2Words > lastHintIndex) {
-                        lastHintIndex = idxFor2Words;
-                    }
-
-                    // 마지막 힌트 어절 인덱스 추가 및 정렬
-                    if (!hintIndexes.contains(lastHintIndex)) {
-                        hintIndexes.add(lastHintIndex);
-                        Collections.sort(hintIndexes);
-                    }
+                    // Content에 특별한 조치 없이 채점이 진행되던 곳까지 만 형광팬
+                    // 나머진 그냥 marking 'u' 상태로 리턴
                     /***** 인덱스들에 대해 hint mark 추가 *****/
-                    // 힌트 어절 인덱스 기준으로 h 표시
+                    // hintIndexes 기준으로 h 표시
                     for (int i : hintIndexes) {
                         if (i < arrCorrect.size()) {
                             arrCorrect.get(i).setMarking('h');
                         }
                     }
 
-                    // Content에 특별한 조치 없이 채점이 진행되던 곳까지 만 형광펜
-                    // 나머진 그냥 marking 'u' 상태로 리턴
+                    // verifiedIndexes 기준으로 v 표시
+                    for (int i : verifiedIndexes) {
+                        if (i < arrCorrect.size()) {
+                            arrCorrect.get(i).setMarking((arrCorrect.get(i).getMarking() == 'h') ? 'h' : 'v');
+                        }
+                    }
+
                     String markedCorrectContent = "";
                     for (Word w : arrCorrect) {
                         markedCorrectContent = markedCorrectContent + w.toMarkedString();
@@ -566,19 +543,18 @@ public class VerseService {
                     }
 
                     resultPoint = TOTAL_SCORE - lostPoint;
-                    logger.debug(markedCorrectContent);
 
-                    return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 없을 때 채점결과를 반영하여 result 창으로 return
+                    return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 남았을 때 채점결과를 반영하여 check 창으로 return
                             .mode("result")
                             .correctTitle(correctTitle)
                             .inputTitleIsCorrect(inputTitleIsCorrect)
-                            .correctContents(markedCorrectContent) // 결과창에 쓰일 정보.
+                            .correctContents(markedCorrectContent) // 결과창에 쓰일 정보. u일 경우 unchecked
                             .inputContents(markedInputContent) // 결과창 내 제출에 쓰일 정보.
                             .hintIndexes(hintIndexes)
                             .verifiedIndexes(verifiedIndexes)
                             .currentHint(hintCnt)
                             .currentMinus(lostPoint)
-                            .currentScore(resultPoint)
+                            .currentScore(resultPoint) // 사실 안쓰이는 정보
                             .build();
                 }
             }
@@ -624,39 +600,35 @@ public class VerseService {
                     lostPoint++;
                     hintCnt++;
 
-                    // 마지막 힌트 어절 인덱스 임시 저장
-                    if (idxFor2Words > lastHintIndex) {
-                        lastHintIndex = idxFor2Words;
-                    }
-
-                    // 마지막 힌트 어절 인덱스 추가 및 정렬
-                    if (!hintIndexes.contains(lastHintIndex)) {
-                        hintIndexes.add(lastHintIndex);
+                    // 힌트 인덱스 추가 및 정렬
+                    if (idxFor2Words > (hintIndexes.size() == 0 ? -1 : hintIndexes.get(hintIndexes.size() - 1))) {
+                        if (!hintIndexes.contains(idxFor2Words)) hintIndexes.add(idxFor2Words);
                         Collections.sort(hintIndexes);
                     }
+                    int lastHintIndex = (hintIndexes.size() == 0 ? -1 : hintIndexes.get(hintIndexes.size() - 1)); // 마지막 힌트 인덱스
 
-                    // 마지막 힌트 어절 인덱스 이후로 words 싹다 지우기
+                    // 마지막 힌트 인덱스 이후로 words 싹다 지우기
                     while (lastHintIndex + 1 < arrCorrect.size()) {
                         arrCorrect.remove(lastHintIndex + 1);
                     }
 
                     /***** 인덱스들에 대해 hint mark 추가 *****/
-                    // 힌트 어절 인덱스 기준으로 h 표시
+                    // hintIndexes 기준으로 h 표시
                     for (int i : hintIndexes) {
                         if (i < arrCorrect.size()) {
                             arrCorrect.get(i).setMarking('h');
                         }
                     }
 
-                    // 임시 검증 어절 인덱스 기준으로 v 표시
-                    for (int i : arrVerifiedIndexes) {
-                        if (i < arrCorrect.size()) {
-                            arrCorrect.get(i).setMarking((arrCorrect.get(i).getMarking() == 'h') ? 'h' : 'v');
-                        }
-                    }
+//                    // verifiedIndexes 기준으로 v 표시
+//                    for (int i : verifiedIndexes) {
+//                        if (i < arrCorrect.size()) {
+//                            arrCorrect.get(i).setMarking((arrCorrect.get(i).getMarking() == 'h') ? 'h' : 'v');
+//                        }
+//                    }
 
                     for (Word w : arrCorrect) {
-                        if (w.getMarking() != 'h' && w.getMarking() != 'v') { /***** || 가 아니라, &&로 수정 *****/
+                        if (w.getMarking() != 'h' && w.getMarking() != 'v') {
                             w.setMarking('c');  // covered = [     ]  처리할 어절
                         }
                     }
@@ -664,17 +636,16 @@ public class VerseService {
 
                     String hintedVerifiedCorrectContent = "";
                     for (Word w : arrCorrect) {
-                        hintedVerifiedCorrectContent += w.toMarkedString();
+                        hintedVerifiedCorrectContent = hintedVerifiedCorrectContent + w.toMarkedString();
                     }
 
-                    logger.debug(hintedVerifiedCorrectContent);
 
                     return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 남았을 때 채점결과를 반영하여 check 창으로 return
                             .mode("check")
                             .correctTitle(correctTitle) // 사실 안쓰이는 정보
                             .inputTitleIsCorrect(inputTitleIsCorrect) // 사실 안쓰이는 정보
                             .correctContents(hintedVerifiedCorrectContent) // 힌트창으로 색칠 or [   ] 처리해서 노출
-                            .inputContents(inputContent) // 그리고 이걸 토대로 input창에도 저장
+                            .inputContents(hintedVerifiedCorrectContent) // 그리고 이걸 토대로 input창에도 저장
                             .hintIndexes(hintIndexes)
                             .verifiedIndexes(verifiedIndexes)
                             .currentHint(hintCnt)
@@ -690,26 +661,24 @@ public class VerseService {
                     if (lostPoint >= 9) lostPoint = 10;
                     hintCnt++;
 
-                    // 마지막 힌트 어절 인덱스 임시 저장
-                    if (idxFor2Words > lastHintIndex) {
-                        lastHintIndex = idxFor2Words;
-                    }
+                    // Content에 특별한 조치 없이 채점이 진행되던 곳까지 만 형광팬
+                    // 나머진 그냥 marking 'u' 상태로 리턴
 
-                    // 마지막 힌트 어절 인덱스 추가 및 정렬
-                    if (!hintIndexes.contains(lastHintIndex)) {
-                        hintIndexes.add(lastHintIndex);
-                        Collections.sort(hintIndexes);
-                    }
                     /***** 인덱스들에 대해 hint mark 추가 *****/
-                    // 힌트 어절 인덱스 기준으로 h 표시
+                    // hintIndexes 기준으로 h 표시
                     for (int i : hintIndexes) {
                         if (i < arrCorrect.size()) {
                             arrCorrect.get(i).setMarking('h');
                         }
                     }
 
-                    // Content에 특별한 조치 없이 채점이 진행되던 곳까지 만 형광펜
-                    // 나머진 그냥 marking 'u' 상태로 리턴
+                    // verifiedIndexes 기준으로 v 표시
+                    for (int i : verifiedIndexes) {
+                        if (i < arrCorrect.size()) {
+                            arrCorrect.get(i).setMarking((arrCorrect.get(i).getMarking() == 'h') ? 'h' : 'v');
+                        }
+                    }
+
                     String markedCorrectContent = "";
                     for (Word w : arrCorrect) {
                         markedCorrectContent = markedCorrectContent + w.toMarkedString();
@@ -720,35 +689,25 @@ public class VerseService {
                         markedInputContent = markedInputContent + w.toMarkedString();
                     }
 
-                    resultPoint = TOTAL_SCORE - lostPoint;
-                    logger.debug(markedCorrectContent);
-
-                    return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 없을 때 채점결과를 반영하여 result 창으로 return
+                    return CheckingContentsResponseDto.builder()
                             .mode("result")
                             .correctTitle(correctTitle)
                             .inputTitleIsCorrect(inputTitleIsCorrect)
-                            .correctContents(markedCorrectContent) // 결과창에 쓰일 정보.
-                            .inputContents(markedInputContent) // 결과창 내 제출에 쓰일 정보.
+                            .correctContents(markedCorrectContent)
+                            .inputContents(markedInputContent)
                             .hintIndexes(hintIndexes)
                             .verifiedIndexes(verifiedIndexes)
                             .currentHint(hintCnt)
                             .currentMinus(lostPoint)
-                            .currentScore(resultPoint)
+                            .currentScore(TOTAL_SCORE - lostPoint)
                             .build();
+
                 } else {
                     // 정상적으로 result 창으로 전달되는 경우
                     lostPoint = tempLostPoint;
                     if (!inputTitleIsCorrect) lostPoint++;
                     if (lostPoint >= 10) lostPoint = 10;
 
-                    /***** 인덱스들에 대해 hint mark 추가 *****/
-                    // 힌트 어절 인덱스 기준으로 h 표시
-                    for (int i : hintIndexes) {
-                        if (i < arrCorrect.size()) {
-                            arrCorrect.get(i).setMarking('h');
-                        }
-                    }
-
                     String markedCorrectContent = "";
                     String markedInputContent = "";
                     for (Word w : arrCorrect) {
@@ -757,6 +716,14 @@ public class VerseService {
                     for (Word w : arrInput) {
                         markedInputContent = markedInputContent + w.toMarkedString();
                     }
+
+                    /*if (idxFor2Words != -1) hintIndexes.add(idxFor2Words);
+                    hintIndexes = (List<Integer>) hintIndexes.stream().distinct().collect(Collectors.toList());
+                    Collections.sort(hintIndexes);
+
+                    for (int i : hintIndexes) {
+                        verifiedIndexes.remove(i);
+                    }*/
 
                     return CheckingContentsResponseDto.builder()
                             .mode("result")
@@ -922,9 +889,8 @@ public class VerseService {
         if (!hintIndexes.contains(len - 1)) { // 정답의 마지막 구절까지 힌트가 이미 나간 경우가 아니라면
             int i = 0;
             while (i < len) { // 힌트 인덱스에 이미 나간 힌트의 인덱스가 없고 && (내가 입력한 구절보다 크거나 || 보내온 구절의 지금 인덱스 어절이 정답 어절과 다르면)
-                if (!hintIndexes.contains(i) && (i >= arrInput.size() || !arrCorrect.get(i).getWord().equals(arrInput.get(i).getWord()))) {
-//                    spaceRevision(arrCorrect.get(i).getWord(), arrInput, i);
-//                    현재 힌트는 띄어쓰기 구분은 못하는 상태임.
+                if (!hintIndexes.contains(i) && (i >= arrInput.size() || !arrCorrect.get(i).equals(arrInput.get(i)))) {
+                    spaceRevision(arrCorrect.get(i).getWord(), arrInput, i);
                     break;
                 } else {
                     if (!hintIndexes.contains(i)) verifiedIndexes.add(i);
