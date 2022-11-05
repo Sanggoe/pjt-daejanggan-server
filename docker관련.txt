@@ -1,0 +1,28 @@
+// java build 명령어
+./gradlew clean build
+
+// docker spring 프로젝트 빌드 명령어
+docker build -t computer012/pjt-daejanggan-server .
+
+// dockerfile
+FROM openjdk:17-alpine
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} pjt-daejanggan.jar
+EXPOSE 8633
+ENTRYPOINT ["java", "-jar", "pjt-daejanggan.jar"]
+
+// docker image 관련 명령어
+docker images
+docker images -a
+docker rmi [imgName]
+docker rmi -f [imgName] // 강제삭제
+docker rm -f $(docker ps -aq --filter ancestor=[삭제안할이미지이름])
+
+// docker network 관련 명령어
+docker network ls
+docker network create daejanggan
+docker network inspect daejanggan
+
+// docker 실행 및 network 연결 명령어
+docker run --network daejanggan -p 8633:8633 computer012/pjt-daejanggan-server
+docker run --network daejanggan -p 3000:3000 computer012/pjt-daejanggan-front

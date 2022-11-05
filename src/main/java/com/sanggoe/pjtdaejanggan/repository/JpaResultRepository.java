@@ -13,7 +13,7 @@ import java.util.Optional;
 public class JpaResultRepository implements ResultRepository {
 
     private final EntityManager em;
-    private static final Logger logger = LoggerFactory.getLogger(JpaVerseRepository.class);
+//    private static final Logger logger = LoggerFactory.getLogger(JpaVerseRepository.class);
 
     public JpaResultRepository(EntityManager em) {
         this.em = em;

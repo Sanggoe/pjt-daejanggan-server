@@ -20,7 +20,7 @@ import java.util.Collections;
 public class UserService {
     private final JpaUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+//    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     // userRepository와 passwordEncoder를 주입받는다.
     public UserService(JpaUserRepository jpaUserRepository, PasswordEncoder passwordEncoder) {

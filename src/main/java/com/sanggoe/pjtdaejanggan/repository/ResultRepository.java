@@ -9,7 +9,7 @@ public interface ResultRepository {
 
     CheckRecord save(CheckRecord checkRecord);
 
-    //    boolean deleteByUsername(String string);
+    //    boolean deleteByUsername(String string); // 회원 삭제 기능 추가 시 확장  
 
     Optional<List<CheckRecord>> findByUsername(String username);
 

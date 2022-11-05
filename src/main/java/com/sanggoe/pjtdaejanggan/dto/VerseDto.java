@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerseDto {
-    
+
     @NotNull
     private String chapverse;
 

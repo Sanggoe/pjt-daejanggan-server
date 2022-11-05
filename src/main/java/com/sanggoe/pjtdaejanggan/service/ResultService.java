@@ -15,7 +15,8 @@ import java.util.List;
 @Service
 public class ResultService {
     private final JpaResultRepository resultRepository;
-    private static final Logger logger = LoggerFactory.getLogger(ResultService.class);
+
+//    private static final Logger logger = LoggerFactory.getLogger(ResultService.class);
 
     public ResultService(JpaResultRepository resultRepository) {
         this.resultRepository = resultRepository;

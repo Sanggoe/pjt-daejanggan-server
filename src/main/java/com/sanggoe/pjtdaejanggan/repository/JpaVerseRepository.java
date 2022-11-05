@@ -14,8 +14,7 @@ import java.util.Optional;
 public class JpaVerseRepository implements VerseRepository {
 
     private final EntityManager em;
-    private static final Logger logger = LoggerFactory.getLogger(JpaVerseRepository.class);
-
+//    private static final Logger logger = LoggerFactory.getLogger(JpaVerseRepository.class);
 
     public JpaVerseRepository(EntityManager em) {
         this.em = em;

@@ -8,6 +8,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     // SecurityConfigAdapter를 상속받는다.
     private TokenProvider tokenProvider;
+
     public JwtSecurityConfig(TokenProvider tokenProvider) { // TokenProvider를 DI받는다.
         this.tokenProvider = tokenProvider;
     }

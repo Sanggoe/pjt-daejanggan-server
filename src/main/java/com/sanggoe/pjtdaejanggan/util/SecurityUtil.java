@@ -12,7 +12,8 @@ public class SecurityUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
 
-    private SecurityUtil() {}
+    private SecurityUtil() {
+    }
 
     // Security context에서 인증 객체를 꺼내와서 이 객체를 통해 username을 return 해주는 util성 메소드!!
     public static Optional<String> getCurrentUsername() {
