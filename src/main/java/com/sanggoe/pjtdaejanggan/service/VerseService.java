@@ -16,6 +16,76 @@ public class VerseService {
 
     private final JpaVerseRepository verseRepository;
     private static final Logger logger = LoggerFactory.getLogger(VerseService.class);
+    private final Map<String, String> shortForm = new HashMap<>() {
+        {
+            put("창", "창세기");
+            put("출", "출애굽기");
+            put("레", "레위기");
+            put("민", "민수기");
+            put("신", "신명기");
+            put("수", "여호수아");
+            put("삿", "사사기");
+            put("룻", "룻기");
+            put("삼상", "사무엘상");
+            put("삼하", "사무엘하");
+            put("왕상", "열왕기상");
+            put("왕하", "열왕기하");
+            put("대상", "역대상");
+            put("대하", "역대하");
+            put("스", "에스라");
+            put("느", "느헤미야");
+            put("에", "에스더");
+            put("욥", "욥기");
+            put("시", "시편");
+            put("잠", "잠언");
+            put("전", "전도서");
+            put("아", "아가");
+            put("사", "이사야");
+            put("렘", "예레미야");
+            put("애", "예레미야애가");
+            put("겔", "에스겔");
+            put("단", "다니엘");
+            put("호", "호세아");
+            put("욜", "요엘");
+            put("암", "아모스");
+            put("옵", "오바댜");
+            put("욘", "요나");
+            put("미", "미가");
+            put("나", "나훔");
+            put("합", "하박국");
+            put("습", "스바냐");
+            put("학", "학개");
+            put("슥", "스가랴");
+            put("말", "말라기");
+            put("마", "마태복음");
+            put("막", "마가복음");
+            put("눅", "누가복음");
+            put("요", "요한복음");
+            put("행", "사도행전");
+            put("롬", "로마서");
+            put("고전", "고린도전서");
+            put("고후", "고린도후서");
+            put("갈", "갈라디아서");
+            put("엡", "에베소서");
+            put("빌", "빌립보서");
+            put("골", "골로새서");
+            put("살전", "데살로니가전서");
+            put("살후", "데살로니가후서");
+            put("딤전", "디모데전서");
+            put("딤후", "디모데후서");
+            put("딛", "디도서");
+            put("몬", "빌레몬서");
+            put("히", "히브리서");
+            put("약", "야고보서");
+            put("벧전", "베드로전서");
+            put("벧후", "베드로후서");
+            put("요일", "요한일서");
+            put("요이", "요한이서");
+            put("요삼", "요한삼서");
+            put("유", "유다서");
+            put("계", "요한계시록");
+        }
+    };
 
     public VerseService(JpaVerseRepository verseRepository) {
         this.verseRepository = verseRepository;
@@ -319,11 +389,11 @@ public class VerseService {
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'w');
                             arrInput.get(pi + 1).setMarking('r');
                             arrCorrect.get(pc + 1).setMarking((arrCorrect.get(pc + 1).getMarking() == 'h') ? 'h' : 'r');
-                            pi++;
-                            pc++;
-                            pi++;
-                            pc++;
                             if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
+                            pi++;
+                            pc++;
+                            pi++;
+                            pc++;
                         } else if (Ab && Ba) { // 도치
 //                            logger.debug("A랑 b가, B랑 a가 맞아요. 도치");
 //                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!! B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "]로 일치!!");
@@ -342,10 +412,10 @@ public class VerseService {
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'm');
                             arrCorrect.get(pc + 1).setMarking((arrCorrect.get(pc + 1).getMarking() == 'h') ? 'h' : 'r');
+                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                             pi++;
                             pc++;
                             pc++;
-                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                         } else if (Ba) { // 추가
 //                            logger.debug("B랑 a가 맞아요. A는 왜쓴거죠?");
 //                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!  A:[" + arrInput.get(pc + 1).getWord() + "]");
@@ -382,9 +452,9 @@ public class VerseService {
 //                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] != a:[" + arrCorrect.get(pc).getWord() + "] 달라요");
                             arrInput.get(pi).setMarking('w');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'w');
+                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                             pi++;
                             pc++;
-                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                         }
 
                     } else if (!existB && existb) {
@@ -402,10 +472,10 @@ public class VerseService {
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'm');
                             arrCorrect.get(pc + 1).setMarking((arrCorrect.get(pc + 1).getMarking() == 'h') ? 'h' : 'r');
+                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                             pi++;
                             pc++;
                             pc++;
-                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                         } else {
 //                            logger.debug("두어절 힌트 나가요");
                             arrCorrect.get(pc).setMarking('h');
@@ -437,9 +507,9 @@ public class VerseService {
 //                            logger.debug("님 틀림ㅋ");
                             arrInput.get(pi).setMarking('w');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'w');
+                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                             pi++;
                             pc++;
-                            if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
                         }
 
                     } else {
@@ -972,7 +1042,14 @@ public class VerseService {
 
     // 정규식으로 parsing 하여 성경이름을 비교한 결과를 반환하는 메서드
     private boolean compareChapterName(String inputChapterName, String correctChapterName) {
-        return inputChapterName.replaceAll("[^\\uAC00-\\uD7A3]", "").equals(correctChapterName);
+        String inputString = inputChapterName.replaceAll("[^\\uAC00-\\uD7A3]", "");
+        if (inputString.equals(correctChapterName)) { // default check
+            return true;
+        } else if (shortForm.containsKey(inputString)) { // shortForm check
+            return shortForm.get(inputString).equals(correctChapterName);
+        }
+        // "-서" 제거
+        return inputString.replace("서", "").equals(correctChapterName.replace("서", ""));
     }
 
     // 정규식으로 parsing 하여 장을 비교한 결과를 반환하는 메서드
@@ -996,3 +1073,16 @@ public class VerseService {
                 .build();
     }
 }
+
+/*
+<보완사항들 . . . >
+
+- 성경제목 정답 로직 변경 (축약형, 서신'서' 생략가능)
+- 점검시 / 힌트시 ',' 등 특수문자 지우기
+- 힌트에 띄어쓰기 로직 추가
+- 로그 기록 남기기
+- 아이디 찾기
+- 아이디 삭제
+- 게스트 로그인
+
+*/
