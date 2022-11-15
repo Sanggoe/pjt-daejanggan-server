@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.sanggoe'
-version = '1.0.0-release'
+version = '0.1.1-release-221105'
 sourceCompatibility = '17'
 
 configurations {
@@ -24,7 +24,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -33,9 +32,9 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
 
-	// mybatis, db 의존성 추가
+	// db 의존성 추가
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.30'
 }

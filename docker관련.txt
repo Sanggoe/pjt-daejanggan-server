@@ -4,6 +4,9 @@
 // docker spring 프로젝트 빌드 명령어
 docker build -t computer012/pjt-daejanggan-server .
 
+// docker hub push 명령어
+docker push computer012/pjt-daejanggan-server
+
 // dockerfile
 FROM openjdk:17-alpine
 ARG JAR_FILE=build/libs/*.jar
@@ -25,4 +28,5 @@ docker network inspect daejanggan
 
 // docker 실행 및 network 연결 명령어
 docker run --network daejanggan -p 8633:8633 computer012/pjt-daejanggan-server
+docker run -p 8633:8633 computer012/pjt-daejanggan-server
 docker run --network daejanggan -p 3000:3000 computer012/pjt-daejanggan-front

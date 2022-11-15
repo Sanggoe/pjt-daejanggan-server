@@ -991,8 +991,8 @@ public class VerseService {
     private CheckingContentsResponseDto compareContentsHint(CheckingContentsRequestDto input, Verse correct) {
         String correctContent = correct.getContents();
         String inputContent = input.getInputContents();
-        List<Word> arrInput = parseToArrlist(inputContent);
-        List<Word> arrCorrect = parseToArrlist(correctContent);
+        List<Word> arrInput = parseToArrlist(inputContent); // 수정 필요
+        List<Word> arrCorrect = parseToArrlist(correctContent); // 수정 필요
         List<Integer> hintIndexes = input.getHintIndexes();
         List<Integer> verifiedIndexes = input.getVerifiedIndexes();
 
@@ -1073,16 +1073,3 @@ public class VerseService {
                 .build();
     }
 }
-
-/*
-<보완사항들 . . . >
-
-- 성경제목 정답 로직 변경 (축약형, 서신'서' 생략가능)
-- 점검시 / 힌트시 ',' 등 특수문자 지우기
-- 힌트에 띄어쓰기 로직 추가
-- 로그 기록 남기기
-- 아이디 찾기
-- 아이디 삭제
-- 게스트 로그인
-
-*/
