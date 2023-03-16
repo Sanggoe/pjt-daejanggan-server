@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class VerseService {
@@ -234,7 +235,7 @@ public class VerseService {
 
         for (int i : hintIndexes) verifiedIndexes.remove(Integer.valueOf(i));
         correctContent = getHintedAndVerifiedCorrectContent(correctContent, hintIndexes, verifiedIndexes);
-//        logger.debug("correctContent : " + correctContent);
+        logger.debug("correctContent : " + correctContent);
 
         // 제목 점검 및 결과
         boolean inputTitleIsCorrect = compareTitle(inputTitle, correctTitle);
@@ -256,7 +257,7 @@ public class VerseService {
             if (!inputTitleIsCorrect) lostPoint += 1;
             resultPoint = TOTAL_SCORE - lostPoint;
 
-//            logger.debug(markedCorrectContent);
+            logger.debug(markedCorrectContent);
 
             return CheckingContentsResponseDto.builder() // whole Check 완료 후, 기존 힌트 감점 및 제목 채점결과를 반영하여 결과창으로 return
                     .mode("result")
@@ -272,11 +273,14 @@ public class VerseService {
                     .build();
 
         } else { // Part Check - 부분 점검으로 들어가야 하는 경우. 어절점검은 input을 기준으로 correct를 비교
-//            logger.debug(">>>>>>>>>> Part Check 진입 합니다~ >>>>>>>>>>");
+            logger.debug(">>>>>>>>>> Part Check 진입 합니다~ >>>>>>>>>>");
 
+            logger.debug("파싱 전 inputContent : " + inputContent);
             // Content -> List 어절별 파싱, 채점용 변수
             List<Word> arrInput = parseToArrlist(inputContent);
             List<Word> arrCorrect = parseToArrlist(correctContent);
+
+            arrCorrect.stream().map(String::valueOf).toList().forEach(logger::debug); // arrInput을 차례로 출력
 
             // Pointer init
             int pi = 0; // pointer for arrInput
@@ -306,7 +310,7 @@ public class VerseService {
 
                 // 어절 비교 맞으면 r로 마킹 후 각 포인터 증가
                 if (arrInput.get(pi).getWord().equals(arrCorrect.get(pc).getWord())) {
-//                    logger.debug("어절비교, [" + arrInput.get(pi).getWord() + "]와 [" + arrCorrect.get(pc).getWord() + "]는 일치");
+                    logger.debug("어절비교, [" + arrInput.get(pi).getWord() + "]와 [" + arrCorrect.get(pc).getWord() + "]는 일치");
                     arrInput.get(pi).setMarking('r');
                     arrCorrect.get(pc).setMarking('r');
                     /***** 어절 임시 검증 정보 추가?? *****/
@@ -366,7 +370,7 @@ public class VerseService {
 
                     if (existB && existb) {
                         // B b 모두 있는 경우
-//                        logger.debug("B, b 둘 다 있는 경우에 해당함");
+                        logger.debug("B, b 둘 다 있는 경우에 해당함");
 
                         // B b에 대한 띄어쓰기 보정
                         arrInput = spaceRevision(arrCorrect.get(pc + 1).getWord(), arrInput, pi + 1);
@@ -377,14 +381,14 @@ public class VerseService {
                         boolean Bb = arrInput.get(pi + 1).getWord().equals(arrCorrect.get(pc + 1).getWord());
 
                         if (Aa) {
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'r');
                             pi++;
                             pc++;
                         } else if (Bb) {    // 틀림
-//                            logger.debug("A랑 a는 틀려요.");
-//                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + " 일치!! A랑 a는 A:[" + arrInput.get(pi).getWord() + "] != a:[" + arrCorrect.get(pc).getWord() + "]로 틀림!!");
+                            logger.debug("A랑 a는 틀려요.");
+                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!! A랑 a는 A:[" + arrInput.get(pi).getWord() + "] != a:[" + arrCorrect.get(pc).getWord() + "]로 틀림!!");
                             arrInput.get(pi).setMarking('w');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'w');
                             arrInput.get(pi + 1).setMarking('r');
@@ -395,8 +399,8 @@ public class VerseService {
                             pi++;
                             pc++;
                         } else if (Ab && Ba) { // 도치
-//                            logger.debug("A랑 b가, B랑 a가 맞아요. 도치");
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!! B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "]로 일치!!");
+                            logger.debug("A랑 b가, B랑 a가 맞아요. 도치");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!! B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "]로 일치!!");
                             arrInput.get(pi).setMarking('i');
                             arrInput.get(pi + 1).setMarking('i');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'i');
@@ -407,8 +411,8 @@ public class VerseService {
                             pc++;
                             tempLostPoint++;
                         } else if (Ab) { // 누락
-//                            logger.debug("A랑 b가 맞아요. input에 a가 없네요?");
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!!  a:[" + arrCorrect.get(pc).getWord() + "]");
+                            logger.debug("A랑 b가 맞아요. input에 a가 없네요?");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!!  a:[" + arrCorrect.get(pc).getWord() + "]");
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'm');
                             arrCorrect.get(pc + 1).setMarking((arrCorrect.get(pc + 1).getMarking() == 'h') ? 'h' : 'r');
@@ -417,8 +421,8 @@ public class VerseService {
                             pc++;
                             pc++;
                         } else if (Ba) { // 추가
-//                            logger.debug("B랑 a가 맞아요. A는 왜쓴거죠?");
-//                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!  A:[" + arrInput.get(pc + 1).getWord() + "]");
+                            logger.debug("B랑 a가 맞아요. A는 왜쓴거죠?");
+                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!  A:[" + arrInput.get(pc + 1).getWord() + "]");
                             arrInput.get(pi).setMarking('a');
                             arrInput.get(pi + 1).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'r');
@@ -427,8 +431,8 @@ public class VerseService {
                             pc++;
                             tempLostPoint++;
                         } else if (!Aa && !Ab && !Ba && !Bb) { // 두 어절 틀림
-//                            logger.debug("A,a,B,b 모두 달라요.");
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "], a:[" + arrCorrect.get(pc).getWord() + "], B:[" + arrInput.get(pi + 1).getWord() + "], b:[" + arrCorrect.get(pc + 1).getWord() + "]");
+                            logger.debug("A,a,B,b 모두 달라요.");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "], a:[" + arrCorrect.get(pc).getWord() + "], B:[" + arrInput.get(pi + 1).getWord() + "], b:[" + arrCorrect.get(pc + 1).getWord() + "]");
                             arrCorrect.get(pc).setMarking('h');
                             flagFor2Words = true;
                             idxFor2Words = pc;
@@ -443,13 +447,13 @@ public class VerseService {
                     } else if (!existB && !existb) {
                         boolean Aa = arrInput.get(pi).getWord().equals(arrCorrect.get(pc).getWord());
                         if (Aa) {
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'r');
                             pi++;
                             pc++;
                         } else {
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] != a:[" + arrCorrect.get(pc).getWord() + "] 달라요");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] != a:[" + arrCorrect.get(pc).getWord() + "] 달라요");
                             arrInput.get(pi).setMarking('w');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'w');
                             if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
@@ -462,13 +466,13 @@ public class VerseService {
                         boolean Ab = arrInput.get(pi).getWord().equals(arrCorrect.get(pc + 1).getWord());
 
                         if (Aa) {
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'r');
                             pi++;
                             pc++;
                         } else if (Ab) { // 누락
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!!  a:[" + arrCorrect.get(pc).getWord() + "] 안썼어요");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == b:[" + arrCorrect.get(pc + 1).getWord() + "] 일치!!  a:[" + arrCorrect.get(pc).getWord() + "] 안썼어요");
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'm');
                             arrCorrect.get(pc + 1).setMarking((arrCorrect.get(pc + 1).getMarking() == 'h') ? 'h' : 'r');
@@ -477,7 +481,7 @@ public class VerseService {
                             pc++;
                             pc++;
                         } else {
-//                            logger.debug("두어절 힌트 나가요");
+                            logger.debug("두어절 힌트 나가요");
                             arrCorrect.get(pc).setMarking('h');
                             flagFor2Words = true;
                             idxFor2Words = pc;
@@ -489,13 +493,13 @@ public class VerseService {
                         boolean Ba = arrInput.get(pi + 1).getWord().equals(arrCorrect.get(pc).getWord());
 
                         if (Aa) {
-//                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
+                            logger.debug("A:[" + arrInput.get(pi).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!");
                             arrInput.get(pi).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'r');
                             pi++;
                             pc++;
                         } else if (Ba) { // 추가
-//                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!  A:[" + arrInput.get(pc + 1).getWord() + "]");
+                            logger.debug("B:[" + arrInput.get(pi + 1).getWord() + "] == a:[" + arrCorrect.get(pc).getWord() + "] 일치!!  A:[" + arrInput.get(pc + 1).getWord() + "]");
                             arrInput.get(pi).setMarking('a');
                             arrInput.get(pi + 1).setMarking('r');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'r');
@@ -504,7 +508,7 @@ public class VerseService {
                             pc++;
                             tempLostPoint++;
                         } else { //틀림
-//                            logger.debug("님 틀림ㅋ");
+                            logger.debug("님 틀림ㅋ");
                             arrInput.get(pi).setMarking('w');
                             arrCorrect.get(pc).setMarking((arrCorrect.get(pc).getMarking() == 'h') ? 'h' : 'w');
                             if (arrCorrect.get(pc).getMarking() != 'h') tempLostPoint++;
@@ -539,10 +543,10 @@ public class VerseService {
 
 
             if (flagFor2Words) { // 두어절 발생!!
-//                logger.debug("두어절이 발생한 듯 합니다.");
+                logger.debug("두어절이 발생한 듯 합니다.");
 
                 if (lostPoint <= 8) { // 아직 기회가 남았을 때
-//                    logger.debug("아직 기회는 남았어요!");
+                    logger.debug("아직 기회는 남았어요!");
                     lostPoint++;
                     hintCnt++;
 
@@ -589,7 +593,7 @@ public class VerseService {
                         hintedVerifiedCorrectContent += w.toMarkedString();
                     }
 
-//                    logger.debug(hintedVerifiedCorrectContent);
+                    logger.debug(hintedVerifiedCorrectContent);
 
                     return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 남았을 때 채점결과를 반영하여 check 창으로 return
                             .mode("check")
@@ -605,7 +609,7 @@ public class VerseService {
                             .build();
 
                 } else { // lostPoint가 9점이상이므로 result mode
-//                    logger.debug("아쉽게도 기회가 없어요.");
+                    logger.debug("아쉽게도 기회가 없어요.");
                     if (lostPoint >= 9) lostPoint = 10;
                     hintCnt++;
 
@@ -640,7 +644,7 @@ public class VerseService {
                     }
 
                     resultPoint = TOTAL_SCORE - lostPoint;
-//                    logger.debug(markedCorrectContent);
+                    logger.debug(markedCorrectContent);
 
                     return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 없을 때 채점결과를 반영하여 result 창으로 return
                             .mode("result")
@@ -665,7 +669,7 @@ public class VerseService {
             // 2어절 flag가 TRUE면 처리 안해도 됨
 
             else { // 두어절 틀림이 발생하지 않았을 때
-//                logger.debug("일단 검사한거에서 두어절 틀림은 없는 듯 해요.");
+                logger.debug("일단 검사한거에서 두어절 틀림은 없는 듯 해요.");
                 boolean restPi = (pi + 1) < arrInput.size();       // pi가 남은경우 true, 남은게 없으면 false
                 boolean restPc = (pc + 1) < arrCorrect.size();     // pc가 남은경우 true, 남은게 없으면 false
 
@@ -698,7 +702,7 @@ public class VerseService {
                 // lostPoint, totalPoint 계산
 
                 if (flagFor2Words && lostPoint <= 8) {
-//                    logger.debug("헉, 남은거에서 두어절 틀린게 나왔어요. 그래도 기회는 있어요!");
+                    logger.debug("헉, 남은거에서 두어절 틀린게 나왔어요. 그래도 기회는 있어요!");
                     lostPoint++;
                     hintCnt++;
 
@@ -745,7 +749,7 @@ public class VerseService {
                         hintedVerifiedCorrectContent += w.toMarkedString();
                     }
 
-//                    logger.debug(hintedVerifiedCorrectContent);
+                    logger.debug(hintedVerifiedCorrectContent);
 
                     return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 남았을 때 채점결과를 반영하여 check 창으로 return
                             .mode("check")
@@ -761,7 +765,7 @@ public class VerseService {
                             .build();
 
                 } else if (flagFor2Words && lostPoint >= 9) {
-//                    logger.debug("헉, 남은거에서 두어절 틀린게 나왔어요. 그리고 기회도 끝났네요.");
+                    logger.debug("헉, 남은거에서 두어절 틀린게 나왔어요. 그리고 기회도 끝났네요.");
                     // result mode로 리턴함, h 마킹한 단어를 힌트 1개 추가 제공하면서 10점 됨
                     // 제목이 틀린 경우도 반영해줌 -> 반영은 하지만 최대 감점은 10점
 
@@ -799,7 +803,7 @@ public class VerseService {
                     }
 
                     resultPoint = TOTAL_SCORE - lostPoint;
-//                    logger.debug(markedCorrectContent);
+                    logger.debug(markedCorrectContent);
 
                     return CheckingContentsResponseDto.builder() // Part Check 완료 후, 두어절 발생 중 기회가 없을 때 채점결과를 반영하여 result 창으로 return
                             .mode("result")
@@ -867,7 +871,7 @@ public class VerseService {
                 marking = word.charAt(checkedIdx + 3);
                 word = word.substring(0, checkedIdx).replaceAll("[^\\uAC00-\\uD7A3]", "");
             }
-            arr.add(new Word(word, marking));
+            arr.add(new Word(word.replaceAll("[^\\uAC00-\\uD7A3]", ""), marking));
         }
         return arr;
     }
@@ -880,13 +884,13 @@ public class VerseService {
         int correctWordLength = correctWord.length();
 
         int idxForInput = arrInput.get(pi).getWord().indexOf(correctWord);
-//        logger.debug(">>>>>>>>> 띄어쓰기 진입");
-//        logger.debug("inputWord : [" + inputWord + "] 띄어쓰기 점검할 word는 이거구요");
-//        logger.debug("correctWord : [" + correctWord + "] 띄어쓰기 점검할 word는 이거구요");
-//        logger.debug("띄어쓰기 추가해야할까? : " + idxForInput + "임.");
+        logger.debug(">>>>>>>>> 띄어쓰기 진입");
+        logger.debug("inputWord : [" + inputWord + "] 띄어쓰기 점검할 word는 이거구요");
+        logger.debug("correctWord : [" + correctWord + "] 띄어쓰기 점검할 word는 이거구요");
+        logger.debug("띄어쓰기 추가해야할까? : " + idxForInput + "임.");
         // Case1. 입력에 정답이 포함된 경우 -> 띄어쓰기를 넣어줌
         if (idxForInput != -1) {
-//            logger.debug("Case1. 띄어쓰기 추가 : " + idxForInput);
+            logger.debug("Case1. 띄어쓰기 추가 : " + idxForInput);
             if (idxForInput == 0) {
                 // 두 어절이 붙어있는 경우
                 // 첫 글자에 정답이 있을 때 정답 어절 길이 만큼 띄어쓰기 해줌
@@ -933,11 +937,11 @@ public class VerseService {
             }
 
             idxForInput = tempJoinWord.indexOf(correctWord);
-//            logger.debug("띄어쓰기 제거해야할까? : " + idxForInput + "임.");
+            logger.debug("띄어쓰기 제거해야할까? : " + idxForInput + "임.");
 
             // tempJoinWord에 CorrectWord가 포함됨 -> 띄어쓰기 넣어서 수정해줌
             if (idxForInput != -1) {
-//                logger.debug("Case2. 띄어쓰기 제거 : " + idxForInput);
+                logger.debug("Case2. 띄어쓰기 제거 : " + idxForInput);
                 // 합친 어절 수 만큼 arrInput arrayList에서 제거
                 for (int i = 0; i <= gap; i++) {
                     arrInput.remove(pi);
@@ -965,7 +969,7 @@ public class VerseService {
                 }
             }
         }
-//        logger.debug(">>>>>>>>> 띄어쓰기 끝");
+        logger.debug(">>>>>>>>> 띄어쓰기 끝");
         return arrInput; // 띄어쓰기 보정 완료 및 return
     }
 

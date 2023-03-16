@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
-// @CrossOrigin
+@CrossOrigin(origins = "http://fg.nh.myds.me", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-//    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    //    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     public UserController(UserService userService) {
         this.userService = userService;
     }

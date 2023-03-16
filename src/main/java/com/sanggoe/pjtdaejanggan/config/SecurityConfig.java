@@ -4,7 +4,9 @@ import com.sanggoe.pjtdaejanggan.jwt.JwtAccessDeniedHandler;
 import com.sanggoe.pjtdaejanggan.jwt.JwtAuthenticationEntryPoint;
 import com.sanggoe.pjtdaejanggan.jwt.JwtSecurityConfig;
 import com.sanggoe.pjtdaejanggan.jwt.TokenProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,9 +15,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // PreAuthorize라고 하는 어노테이션을 메서드 단위로 사용하기 위해
 public class SecurityConfig {
@@ -30,18 +34,15 @@ public class SecurityConfig {
 
     */
     private final TokenProvider tokenProvider;
-    private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; // 401 Unauthorized Error
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler; // 403 Forbidden Error
 
     public SecurityConfig( // 토큰 제공자, 유효하지 않은 자격증명 접근 401 Error, 권한이 없는 403 Error 반환 위한 객체들 DI
                            TokenProvider tokenProvider,
-                           CorsFilter corsFilter,
                            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
                            JwtAccessDeniedHandler jwtAccessDeniedHandler
     ) {
         this.tokenProvider = tokenProvider;
-        this.corsFilter = corsFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
@@ -51,9 +52,33 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+    @Value("${logging.level.org.springframework.security.debug:false}")
+    boolean webSecurityDebug;
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers(); // "/h2-console/**", "/favicon.ico", "/error");
+        return (web) -> web.debug(webSecurityDebug)
+                        .ignoring().antMatchers(); // "/h2-console/**", "/favicon.ico", "/error");
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+//        configuration.addAllowedOrigin("http://192.168.0.102:3000");
+//        configuration.addAllowedOrigin("http://127.0.0.1:3000");
+//        configuration.addAllowedOrigin("http://localhost:3000");
+//        configuration.addAllowedOrigin("http://fg.nh.myds.me");
+//        configuration.addAllowedOrigin("https://fgs.nh.myds.me");
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 
     @Bean
@@ -63,12 +88,11 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 // cors 옵션 활성화를 위한 코드
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic().disable()
-                .cors()
+                .cors().configurationSource(corsConfigurationSource())
 
                 // 예외처리 핸들러는 직접 만들어준 핸들러로 설정
-                .and()
+                .and()  
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 401 Unauthorized Error
                 .accessDeniedHandler(jwtAccessDeniedHandler) // 403 Forbidden Error

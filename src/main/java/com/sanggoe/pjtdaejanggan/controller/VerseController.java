@@ -4,16 +4,14 @@ import com.sanggoe.pjtdaejanggan.dto.*;
 import com.sanggoe.pjtdaejanggan.service.VerseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@CrossOrigin(origins = "http://fg.nh.myds.me", allowedHeaders = "*", allowCredentials = "true")
+@RestController
 @RequestMapping("/api/verse")
 public class VerseController {
-
     private final VerseService verseService;
 
     public VerseController(VerseService verseService) {

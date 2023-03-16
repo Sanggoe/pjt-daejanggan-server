@@ -3,6 +3,10 @@
 * 성경 구절 암송 체킹 사이트 구축 프로젝트
 * [React-front 프로젝트 레포지토리](https://github.com/Sanggoe/pjt-daejanggan-front)
 
+### 시스템 구성도
+
+![image-시스템 구성도](imgs/시스템 구성도.png)
+
 
 
 ## 학습을 위한 선행 예제 프로젝트1

@@ -2,7 +2,9 @@
 ./gradlew clean build
 
 // docker spring 프로젝트 빌드 명령어
-docker build -t computer012/pjt-daejanggan-server .
+docker build -t computer012/pjt-daejanggan-server:tagname .
+docker build -t computer012/pjt-daejanggan-server-for-local .
+docker build -t computer012/pjt-daejanggan-server-only-intranet:tagname .
 
 // docker hub push 명령어
 docker push computer012/pjt-daejanggan-server

@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-// 마지막으로, API 호출에 대해 다뤄줄 컨트롤러!!
-// @CrossOrigin // 개발하는 로컬 와이파이 변경시 반드시 변경!! 배포할 때도 변경
+@CrossOrigin(origins = "http://fg.nh.myds.me", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/user")
 public class AuthController {

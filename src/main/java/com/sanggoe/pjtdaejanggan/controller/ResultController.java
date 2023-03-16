@@ -7,13 +7,12 @@ import com.sanggoe.pjtdaejanggan.entity.CheckRecord;
 import com.sanggoe.pjtdaejanggan.service.ResultService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@CrossOrigin(origins = "http://fg.nh.myds.me", allowedHeaders = "*", allowCredentials = "true")
+@RestController
 @RequestMapping("/api/result")
 public class ResultController {
     private final ResultService resultService;
